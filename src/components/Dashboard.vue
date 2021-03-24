@@ -10,11 +10,7 @@
       <button class="button" @click="updateDimensions">Create Map</button>
     </div>
     <div class="toolsAndMapWrapper" v-if="dimensionsSet">
-      <div>
-        Tools
-        <button @click="changePlacing('floor')">Floor</button>
-        <button @click="changePlacing('wall')">Wall</button>
-      </div>
+      <tool-bar @update-tile-placing="updateTilePlacing" />
       <level-map
         :height="height"
         :width="width"
@@ -27,7 +23,27 @@
       <input class="input" v-model="levelNumber" />
       <button @click="writeJSON">Output File</button>
       <div class="instructions">
-        Add the level file to the game to play it!
+        <h3 class="instructionsTitle">
+          Instructions For Downloading and Playing the Level
+        </h3>
+        <ol class="instructionsList">
+          <li>
+            Set the level number as 1 + the current max level in the codebase.
+          </li>
+          <li>
+            After downloading, add the level to /core/assets/levels/
+          </li>
+          <li>
+            Set the maxLevels variable in GameplayController to this level
+            number.
+          </li>
+          <li>
+            Add an import for this new JSON file in /core/assets/assets.json
+          </li>
+          <li>
+            After all of this, the level should be playable!
+          </li>
+        </ol>
       </div>
     </div>
   </div>
@@ -35,13 +51,14 @@
 
 <script>
 import LevelMap from "@/components/LevelMap.vue";
+import ToolBar from "@/components/ToolBar.vue";
 
 // UPDATE THE VERSION NUMBER WHEN THE JSON CHANGES
 // TODO - convert old versions to new versions somehow
 const versionNumber = "1.0";
 
 export default {
-  components: { LevelMap },
+  components: { LevelMap, ToolBar },
   data() {
     return {
       width: 0,
@@ -61,16 +78,14 @@ export default {
       this.height = Number(this.rows);
       this.dimensionsSet = true;
     },
-    // update what the user can place on mouse click
-    // type can be "floor", "wall", "goal", "player", "mutant", "brick", or "bomb"
-    changePlacing(type) {
-      this.typePlacing = type;
-      console.log(this.typePlacing);
-    },
     // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
     updateTiles(tiles) {
       this.tiles = tiles;
       console.log(this.tiles);
+    },
+    // update the tile being placed when a button is clicked on in ToolBar
+    updateTilePlacing(type) {
+      this.typePlacing = type;
     },
     // create the json based on the map and call the output method
     writeJSON() {
@@ -169,9 +184,22 @@ export default {
 
 .toolsAndMapWrapper {
   display: flex;
+  justify-content: center;
 }
 
 .outputWrapper {
   margin-top: 1rem;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  text-align: left;
+}
+
+.instructionsTitle {
+  margin-bottom: 0;
+  margin-top: 2rem;
 }
 </style>
