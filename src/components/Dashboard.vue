@@ -9,11 +9,26 @@
       </div>
       <button class="button" @click="updateDimensions">Create Map</button>
     </div>
-    <level-map :height="height" :width="width" />
+    <div class="toolsAndMapWrapper" v-if="dimensionsSet">
+      <div>
+        Tools
+        <button @click="changePlacing('floor')">Floor</button>
+        <button @click="changePlacing('wall')">Wall</button>
+      </div>
+      <level-map
+        :height="height"
+        :width="width"
+        :typeToPlace="typePlacing"
+        @tile-changed="updateTiles"
+      />
+    </div>
     <div v-if="dimensionsSet" class="outputWrapper">
       <span>Level Number:</span>
       <input class="input" v-model="levelNumber" />
       <button @click="writeJSON">Output File</button>
+      <div class="instructions">
+        Add the level file to the game to play it!
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +50,8 @@ export default {
       cols: "",
       levelNumber: 0,
       dimensionsSet: false,
+      typePlacing: "floor",
+      tiles: [],
     };
   },
   methods: {
@@ -43,6 +60,17 @@ export default {
       this.width = Number(this.cols);
       this.height = Number(this.rows);
       this.dimensionsSet = true;
+    },
+    // update what the user can place on mouse click
+    // type can be "floor", "wall", "goal", "player", "mutant", "brick", or "bomb"
+    changePlacing(type) {
+      this.typePlacing = type;
+      console.log(this.typePlacing);
+    },
+    // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
+    updateTiles(tiles) {
+      this.tiles = tiles;
+      console.log(this.tiles);
     },
     // create the json based on the map and call the output method
     writeJSON() {
@@ -71,10 +99,15 @@ export default {
       let layout = [];
       for (let r = 0; r < this.height; r++) {
         for (let c = 0; c < this.width; c++) {
-          layout.push(0);
+          if (this.tiles[r][c] === "floor") {
+            layout.push(0);
+          } else {
+            layout.push(1);
+          }
         }
       }
       json["layout"] = layout;
+      console.log(json);
 
       this.outputJSONToFile(json);
     },
@@ -132,6 +165,10 @@ export default {
 
 .button {
   margin-top: 0.5rem;
+}
+
+.toolsAndMapWrapper {
+  display: flex;
 }
 
 .outputWrapper {
