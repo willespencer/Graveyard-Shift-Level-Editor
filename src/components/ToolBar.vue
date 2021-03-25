@@ -1,19 +1,71 @@
 <template>
   <div class="toolbar">
-    Toolbar
+    <h3>Toolbar</h3>
     <div>
-      Tiles
-      <button @click="changePlacing('floor')">Floor</button>
-      <button @click="changePlacing('wall')">Wall</button>
-      <button @click="changePlacing('goal')">Goal</button>
-      <button @click="changePlacing('glass')">Glass</button>
+      <div class="section">Tiles</div>
+      <div class="buttons">
+        <button
+          class="button"
+          @click="changePlacing('floor')"
+          :disabled="isSelected('floor')"
+        >
+          Floor
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('wall')"
+          :disabled="isSelected('wall')"
+        >
+          Wall
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('goal')"
+          :disabled="isSelected('goal')"
+        >
+          Goal
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('glass')"
+          :disabled="isSelected('glass')"
+        >
+          Glass
+        </button>
+      </div>
     </div>
     <div>
-      Objects
-      <button @click="changePlacing('player')">Player</button>
-      <button @click="changePlacing('mutant')">Mutant</button>
-      <button @click="changePlacing('brick')">Brick</button>
-      <button @click="changePlacing('bomb')">Bomb</button>
+      <div class="section">Objects</div>
+      <div class="buttons">
+        <button
+          class="button"
+          @click="changePlacing('player')"
+          :disabled="isSelected('player')"
+        >
+          Player
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('mutant')"
+          :disabled="isSelected('mutant')"
+        >
+          Mutant
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('brick')"
+          :disabled="isSelected('brick')"
+        >
+          Brick
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('bomb')"
+          :disabled="isSelected('bomb')"
+        >
+          Bomb
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -32,8 +84,29 @@ export default {
       this.typePlacing = type;
       this.$emit("update-tile-placing", type);
     },
+    // true if the type of the button is the same as the type of tile being placed
+    // used to determine which button is disabled
+    isSelected(type) {
+      return type == this.typePlacing;
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.toolbar {
+  margin-right: 3rem;
+}
+.section {
+  margin-top: 1rem;
+}
+.buttons {
+  margin-top: 0.5rem;
+}
+.button {
+  margin-left: 1rem;
+}
+.button:first-child {
+  margin-left: 0;
+}
+</style>

@@ -93,31 +93,35 @@ export default {
       let json = {};
       json["version"] = versionNumber;
 
+      let mutantSpawns = this.findObjects("mutant");
+      let brickSpawns = this.findObjects("brick");
+      let bombSpawns = this.findObjects("bomb");
+      let itemSpawns = this.generateItemSpawns(brickSpawns, bombSpawns);
+
       // set metadata
       let metadata = {
         width: this.width,
         height: this.height,
-        "player-spawn": [1, 1],
-        "mutant-count": 1,
-        "mutant-spawns": [[2, 2]],
-        "item-count": 1,
-        "item-spawns": [
-          {
-            position: [2, 1],
-            type: "BRICK",
-          },
-        ],
+        "player-spawn": this.findPlayer(),
+        "mutant-count": mutantSpawns.length,
+        "mutant-spawns": mutantSpawns,
+        "item-count": brickSpawns.length + bombSpawns.length,
+        "item-spawns": itemSpawns,
       };
       json["metadata"] = metadata;
 
       // set layout
       let layout = [];
-      for (let r = 0; r < this.height; r++) {
+      for (let r = this.height - 1; r >= 0; r--) {
         for (let c = 0; c < this.width; c++) {
-          if (this.tiles[r][c] === "floor") {
-            layout.push(0);
-          } else {
+          if (this.tiles[r][c] === "wall") {
             layout.push(1);
+          } else if (this.tiles[r][c] === "glass") {
+            layout.push(2);
+          } else if (this.tiles[r][c] === "goal") {
+            layout.push(4);
+          } else {
+            layout.push(0);
           }
         }
       }
@@ -154,6 +158,51 @@ export default {
         null
       );
       a.dispatchEvent(e);
+    },
+    // returns the location of the player, or an empty array if not found
+    // TODO - should we require a player to exist
+    // TODO - added transforms to here and other methods to match json, maybe json file should be changed
+    findPlayer() {
+      for (let r = 0; r < this.height; r++) {
+        for (let c = 0; c < this.width; c++) {
+          if (this.tiles[r][c] === "player") {
+            return [c, this.height - r - 1];
+          }
+        }
+      }
+      return [];
+    },
+    // returns a 2d array representing all positions of objectType
+    // used to find mutants, bombs, bricks, etc.
+    findObjects(objectType) {
+      let objectList = [];
+      for (let r = 0; r < this.height; r++) {
+        for (let c = 0; c < this.width; c++) {
+          if (this.tiles[r][c] === objectType) {
+            objectList.push([c, this.height - r - 1]);
+          }
+        }
+      }
+      return objectList;
+    },
+    // returns the json representation of all the item types and their locations
+    generateItemSpawns(bricks, bombs) {
+      let itemSpawns = [];
+      bricks.forEach((b) => {
+        let item = {};
+        item.type = "BRICK";
+        item.position = b;
+        itemSpawns.push(item);
+      });
+
+      bombs.forEach((b) => {
+        let item = {};
+        item.type = "BOMB";
+        item.position = b;
+        itemSpawns.push(item);
+      });
+
+      return itemSpawns;
     },
   },
 };
