@@ -1,0 +1,132 @@
+<template>
+  <div class="levelmap">
+    <div class="row" v-for="(row, r) in height" v-bind:key="r">
+      <div
+        class="col"
+        v-for="(col, c) in width"
+        v-bind:key="c"
+        :class="{
+          floor: isTileType(r, c, 'floor') || !isTile(r, c),
+          wall: isTileType(r, c, 'wall'),
+          glass: isTileType(r, c, 'glass'),
+          goal: isTileType(r, c, 'goal'),
+        }"
+        @click="updateTile(r, c)"
+      >
+        <div
+          v-if="!isTile(r, c)"
+          class="image"
+          :class="{
+            player: isTileType(r, c, 'player'),
+            mutant: isTileType(r, c, 'mutant'),
+            bomb: isTileType(r, c, 'bomb'),
+            brick: isTileType(r, c, 'brick'),
+          }"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+// TODO update with more types as they get added to the game
+const tileTypes = ["floor", "wall", "glass", "goal"];
+
+export default {
+  props: {
+    height: Number,
+    width: Number,
+    typeToPlace: String,
+  },
+  data() {
+    return {
+      tileTypes: [],
+    };
+  },
+  created() {
+    this.createTileTypes();
+  },
+  methods: {
+    // create the tile type array, default tiles are set to floor
+    createTileTypes() {
+      for (let r = 0; r < this.height; r++) {
+        this.tileTypes.push([]);
+        for (let c = 0; c < this.width; c++) {
+          this.tileTypes[r].push("floor");
+        }
+      }
+      this.$emit("tile-changed", this.tileTypes);
+    },
+    // checks if the tile at r, c is of type type
+    isTileType(r, c, type) {
+      return this.tileTypes[r][c] === type;
+    },
+    // return true if a type is a tile
+    isTile(r, c) {
+      return tileTypes.includes(this.tileTypes[r][c]);
+    },
+    // when clicked, update the tile at r, c to whatever type of tile is being placed
+    updateTile(r, c) {
+      const newRow = this.tileTypes[r].slice(0);
+      newRow[c] = this.typeToPlace;
+      this.$set(this.tileTypes, r, newRow);
+      this.$emit("tile-changed", this.tileTypes);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.levelmap {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  height: 60px;
+  width: 60px;
+}
+
+.floor {
+  background-image: url("~@/assets/floor.png");
+}
+
+.wall {
+  background-image: url("~@/assets/walltop.png");
+}
+
+.glass {
+  background-image: url("~@/assets/glass.png");
+}
+
+.goal {
+  background-image: url("~@/assets/goal.png");
+}
+
+.image {
+  width: 60px;
+  height: 60px;
+}
+
+.player {
+  background-image: url("~@/assets/player.png");
+}
+
+.mutant {
+  background-image: url("~@/assets/mutant.png");
+}
+
+.brick {
+  background-image: url("~@/assets/brick.png");
+}
+
+.bomb {
+  background-image: url("~@/assets/bomb.png");
+}
+</style>
