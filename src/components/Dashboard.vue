@@ -21,7 +21,7 @@
     <div v-if="dimensionsSet" class="outputWrapper">
       <span>Level Number:</span>
       <input class="input" v-model="levelNumber" />
-      <button @click="writeJSON">Output File</button>
+      <button @click="writeJSON" :disabled="!areRulesMet">Output File</button>
       <div class="instructions">
         <h3 class="instructionsTitle">
           Instructions For Downloading and Playing the Level
@@ -71,6 +71,18 @@ export default {
       tiles: [],
     };
   },
+  computed: {
+    // return true if the current rules of the map are met
+    // rules currently require there to be exactly one player and one goal tile
+    areRulesMet() {
+      if (this.tiles.length > 0) {
+        let players = this.findObjects("player");
+        let goals = this.findObjects("goal");
+        return players.length === 1 && goals.length === 1;
+      }
+      return false;
+    },
+  },
   methods: {
     // update the board dimensions on button click
     updateDimensions() {
@@ -106,7 +118,7 @@ export default {
       let metadata = {
         width: this.width,
         height: this.height,
-        "player-spawn": this.findPlayer(),
+        "player-spawn": this.findObjects("player")[0],
         "mutant-count": mutantSpawns.length,
         "mutant-spawns": mutantSpawns,
         "item-count": itemSpawns.length,
@@ -165,21 +177,9 @@ export default {
       );
       a.dispatchEvent(e);
     },
-    // returns the location of the player, or an empty array if not found
-    // TODO - should we require a player to exist
-    // TODO - added transforms to here and other methods to match json, maybe json file should be changed
-    findPlayer() {
-      for (let r = 0; r < this.height; r++) {
-        for (let c = 0; c < this.width; c++) {
-          if (this.tiles[r][c] === "player") {
-            return [c, this.height - r - 1];
-          }
-        }
-      }
-      return [];
-    },
     // returns a 2d array representing all positions of objectType
-    // used to find mutants, bombs, bricks, keys, etc.
+    // used to find players, mutants, bombs, bricks, keys, etc.
+    // TODO - added transforms to here and other methods to match json, maybe json file should be changed
     findObjects(objectType) {
       let objectList = [];
       for (let r = 0; r < this.height; r++) {

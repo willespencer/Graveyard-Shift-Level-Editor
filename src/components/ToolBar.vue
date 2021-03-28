@@ -81,6 +81,14 @@
         </button>
       </div>
     </div>
+    <div>
+      <div class="section">Rules</div>
+      <ol>
+        <li>There must be exactly 1 player on the level</li>
+        <li>There must be exactly 1 goal on the level</li>
+      </ol>
+      <span>If these rules are not followed, level cannot be downloaded!</span>
+    </div>
   </div>
 </template>
 
