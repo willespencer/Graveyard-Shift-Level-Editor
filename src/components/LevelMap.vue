@@ -9,6 +9,7 @@
           floor: isTileType(r, c, 'floor') || !isTile(r, c),
           wall: isTileType(r, c, 'wall'),
           glass: isTileType(r, c, 'glass'),
+          door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
         }"
         @click="updateTile(r, c)"
@@ -21,6 +22,7 @@
             mutant: isTileType(r, c, 'mutant'),
             bomb: isTileType(r, c, 'bomb'),
             brick: isTileType(r, c, 'brick'),
+            key: isTileType(r, c, 'key'),
           }"
         />
       </div>
@@ -30,7 +32,7 @@
 
 <script>
 // TODO update with more types as they get added to the game
-const tileTypes = ["floor", "wall", "glass", "goal"];
+const tileTypes = ["floor", "wall", "glass", "goal", "door"];
 
 export default {
   props: {
@@ -105,6 +107,10 @@ export default {
   background-image: url("~@/assets/glass.png");
 }
 
+.door {
+  background-image: url("~@/assets/door.png");
+}
+
 .goal {
   background-image: url("~@/assets/goal.png");
 }
@@ -128,5 +134,9 @@ export default {
 
 .bomb {
   background-image: url("~@/assets/bomb.png");
+}
+
+.key {
+  background-image: url("~@/assets/key.png");
 }
 </style>

@@ -32,6 +32,13 @@
         >
           Glass
         </button>
+        <button
+          class="button"
+          @click="changePlacing('door')"
+          :disabled="isSelected('door')"
+        >
+          Door
+        </button>
       </div>
     </div>
     <div>
@@ -65,6 +72,13 @@
         >
           Bomb
         </button>
+        <button
+          class="button"
+          @click="changePlacing('key')"
+          :disabled="isSelected('key')"
+        >
+          Key
+        </button>
       </div>
     </div>
   </div>
@@ -79,7 +93,7 @@ export default {
   },
   methods: {
     // update what the user can place on mouse click
-    // type can be "floor", "wall", "goal", "player", "mutant", "brick", or "bomb"
+    // type can be "floor", "wall", "goal", "door", "player", "mutant", "brick", "bomb", or "key"
     changePlacing(type) {
       this.typePlacing = type;
       this.$emit("update-tile-placing", type);
