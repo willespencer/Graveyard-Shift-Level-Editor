@@ -89,14 +89,18 @@ export default {
     },
     // create the json based on the map and call the output method
     writeJSON() {
-      // TODO - remove hardcoded values
       let json = {};
       json["version"] = versionNumber;
 
       let mutantSpawns = this.findObjects("mutant");
       let brickSpawns = this.findObjects("brick");
       let bombSpawns = this.findObjects("bomb");
-      let itemSpawns = this.generateItemSpawns(brickSpawns, bombSpawns);
+      let keySpawns = this.findObjects("key");
+      let itemSpawns = this.generateItemSpawns(
+        brickSpawns,
+        bombSpawns,
+        keySpawns
+      );
 
       // set metadata
       let metadata = {
@@ -105,7 +109,7 @@ export default {
         "player-spawn": this.findPlayer(),
         "mutant-count": mutantSpawns.length,
         "mutant-spawns": mutantSpawns,
-        "item-count": brickSpawns.length + bombSpawns.length,
+        "item-count": itemSpawns.length,
         "item-spawns": itemSpawns,
       };
       json["metadata"] = metadata;
@@ -118,6 +122,8 @@ export default {
             layout.push(1);
           } else if (this.tiles[r][c] === "glass") {
             layout.push(2);
+          } else if (this.tiles[r][c] === "door") {
+            layout.push(5);
           } else if (this.tiles[r][c] === "goal") {
             layout.push(4);
           } else {
@@ -173,7 +179,7 @@ export default {
       return [];
     },
     // returns a 2d array representing all positions of objectType
-    // used to find mutants, bombs, bricks, etc.
+    // used to find mutants, bombs, bricks, keys, etc.
     findObjects(objectType) {
       let objectList = [];
       for (let r = 0; r < this.height; r++) {
@@ -186,7 +192,7 @@ export default {
       return objectList;
     },
     // returns the json representation of all the item types and their locations
-    generateItemSpawns(bricks, bombs) {
+    generateItemSpawns(bricks, bombs, keys) {
       let itemSpawns = [];
       bricks.forEach((b) => {
         let item = {};
@@ -199,6 +205,13 @@ export default {
         let item = {};
         item.type = "BOMB";
         item.position = b;
+        itemSpawns.push(item);
+      });
+
+      keys.forEach((k) => {
+        let item = {};
+        item.type = "KEY";
+        item.position = k;
         itemSpawns.push(item);
       });
 

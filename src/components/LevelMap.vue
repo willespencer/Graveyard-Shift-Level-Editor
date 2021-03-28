@@ -49,12 +49,18 @@ export default {
     this.createTileTypes();
   },
   methods: {
-    // create the tile type array, default tiles are set to floor
+    // create the tile type array, default tiles are set to wall around the border, floor otherwise
     createTileTypes() {
       for (let r = 0; r < this.height; r++) {
         this.tileTypes.push([]);
         for (let c = 0; c < this.width; c++) {
-          this.tileTypes[r].push("floor");
+          if (r === 0 || r === this.height - 1) {
+            this.tileTypes[r].push("wall");
+          } else if (c === 0 || c === this.width - 1) {
+            this.tileTypes[r].push("wall");
+          } else {
+            this.tileTypes[r].push("floor");
+          }
         }
       }
       this.$emit("tile-changed", this.tileTypes);
