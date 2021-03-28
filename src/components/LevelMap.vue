@@ -12,7 +12,9 @@
           door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
         }"
-        @click="updateTile(r, c)"
+        @mousedown="down(r, c)"
+        @mousemove="move(r, c)"
+        @mouseup="up()"
       >
         <div
           v-if="!isTile(r, c)"
@@ -43,12 +45,25 @@ export default {
   data() {
     return {
       tileTypes: [],
+      isMouseDown: false,
     };
   },
   created() {
     this.createTileTypes();
   },
   methods: {
+    down(r, c) {
+      this.isMouseDown = true;
+      this.updateTile(r, c);
+    },
+    move(r, c) {
+      if (this.isMouseDown) {
+        this.updateTile(r, c);
+      }
+    },
+    up() {
+      this.isMouseDown = false;
+    },
     // create the tile type array, default tiles are set to wall around the border, floor otherwise
     createTileTypes() {
       for (let r = 0; r < this.height; r++) {
