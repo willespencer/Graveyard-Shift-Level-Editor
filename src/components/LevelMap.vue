@@ -41,10 +41,16 @@ export default {
     height: Number,
     width: Number,
     typeToPlace: String,
+    inputTiles: Array,
   },
   data() {
+    // if tilea inputted (i.e. map loaded), display that instead of the default map
+    let tiles = [];
+    if (this.inputTiles.length > 0) {
+      tiles = this.inputTiles;
+    }
     return {
-      tileTypes: [],
+      tileTypes: tiles,
       isMouseDown: false,
     };
   },

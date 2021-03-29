@@ -1,24 +1,35 @@
 <template>
   <div class="dashboard">
     <h1>Level Editor</h1>
-    <div class="sizeWrapper">
-      <span>What size should the level be (in tiles, width x height)?</span>
-      <div class="sizeInputs">
-        <input class="input" v-model="cols" /> x
-        <input class="input" v-model="rows" />
+    <div class="topWrapper" v-if="!displayMap">
+      <div class="optionWrapper">
+        <h3>New Level</h3>
+        <span>What size should the level be (in tiles, width x height)?</span>
+        <div class="sizeInputs">
+          <input class="input" v-model="cols" /> x
+          <input class="input" v-model="rows" />
+        </div>
+        <button class="button" @click="updateDimensions">
+          Create Map
+        </button>
       </div>
-      <button class="button" @click="updateDimensions">Create Map</button>
+      <div class="optionWrapper">
+        <h3>Existing Level</h3>
+        <input type="file" ref="myFiles" class="fileInput" />
+        <button class="button" @click="loadMap">Load Map</button>
+      </div>
     </div>
-    <div class="toolsAndMapWrapper" v-if="dimensionsSet">
+    <div class="toolsAndMapWrapper" v-if="displayMap">
       <tool-bar @update-tile-placing="updateTilePlacing" />
       <level-map
         :height="height"
         :width="width"
         :typeToPlace="typePlacing"
+        :inputTiles="inputTiles"
         @tile-changed="updateTiles"
       />
     </div>
-    <div v-if="dimensionsSet" class="outputWrapper">
+    <div v-if="displayMap" class="outputWrapper">
       <span>Level Number:</span>
       <input class="input" v-model="levelNumber" />
       <button @click="writeJSON" :disabled="!areRulesMet">Output File</button>
@@ -66,9 +77,10 @@ export default {
       rows: "",
       cols: "",
       levelNumber: 0,
-      dimensionsSet: false,
+      displayMap: false,
       typePlacing: "floor",
       tiles: [],
+      inputTiles: [],
     };
   },
   computed: {
@@ -88,16 +100,98 @@ export default {
     updateDimensions() {
       this.width = Number(this.cols);
       this.height = Number(this.rows);
-      this.dimensionsSet = true;
+      this.displayMap = true;
     },
     // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
     updateTiles(tiles) {
       this.tiles = tiles;
-      console.log(this.tiles);
     },
     // update the tile being placed when a button is clicked on in ToolBar
     updateTilePlacing(type) {
       this.typePlacing = type;
+    },
+    // load in an existing map
+    // code adapted from: https://stackoverflow.com/questions/59155812/vue-upload-local-json-file
+    loadMap() {
+      const files = this.$refs.myFiles.files;
+      if (files.length <= 0) {
+        return false;
+      }
+
+      const fr = new FileReader();
+
+      fr.onload = (e) => {
+        const result = JSON.parse(e.target.result);
+        this.convertJSONToMap(result);
+      };
+      fr.readAsText(files.item(0));
+    },
+    // converts a loaded in JSON to the parameters needed to display it
+    convertJSONToMap(json) {
+      // set width and height
+      this.width = json.metadata.width;
+      this.height = json.metadata.height;
+
+      // copy tile layout in
+      let jsonLayout = json.layout;
+      let tiles = new Array(this.height)
+        .fill(0)
+        .map(() => new Array(this.width).fill(0));
+      for (let i = 0; i < jsonLayout.length; i++) {
+        let r = this.height - 1 - Math.floor(i / this.width);
+        let c = i % this.width;
+        tiles[r][c] = this.convertNumberToTile(jsonLayout[i]);
+      }
+
+      // copy item spawns in
+      let itemSpawns = json.metadata["item-spawns"];
+      for (let i = 0; i < itemSpawns.length; i++) {
+        let position = itemSpawns[i].position;
+        let type = itemSpawns[i].type.toLowerCase();
+        tiles[this.height - position[1] - 1][position[0]] = type;
+      }
+
+      // copy player mutants in
+      let mutantSpawns = json.metadata["mutant-spawns"];
+      for (let i = 0; i < mutantSpawns.length; i++) {
+        let position = mutantSpawns[i];
+        tiles[this.height - position[1] - 1][position[0]] = "mutant";
+      }
+
+      let playerSpawn = json.metadata["player-spawn"];
+      tiles[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
+
+      // set input tiles and display the map
+      this.inputTiles = tiles;
+      this.displayMap = true;
+    },
+    // converts the number representation of a tile in the game to the label in the editor
+    convertNumberToTile(num) {
+      if (num == 1) {
+        return "wall";
+      } else if (num == 2) {
+        return "glass";
+      } else if (num == 5) {
+        return "door";
+      } else if (num == 4) {
+        return "goal";
+      } else {
+        return "floor";
+      }
+    },
+    // converts the tile name in the editor to the number representation of a tile in the game
+    convertTileToNumber(tile) {
+      if (tile == "wall") {
+        return 1;
+      } else if (tile == "glass") {
+        return 2;
+      } else if (tile == "door") {
+        return 5;
+      } else if (tile == "goal") {
+        return 4;
+      } else {
+        return 0;
+      }
     },
     // create the json based on the map and call the output method
     writeJSON() {
@@ -130,21 +224,10 @@ export default {
       let layout = [];
       for (let r = this.height - 1; r >= 0; r--) {
         for (let c = 0; c < this.width; c++) {
-          if (this.tiles[r][c] === "wall") {
-            layout.push(1);
-          } else if (this.tiles[r][c] === "glass") {
-            layout.push(2);
-          } else if (this.tiles[r][c] === "door") {
-            layout.push(5);
-          } else if (this.tiles[r][c] === "goal") {
-            layout.push(4);
-          } else {
-            layout.push(0);
-          }
+          layout.push(this.convertTileToNumber(this.tiles[r][c]));
         }
       }
       json["layout"] = layout;
-      console.log(json);
 
       this.outputJSONToFile(json);
     },
@@ -222,12 +305,14 @@ export default {
 </script>
 
 <style scoped>
-.sizeWrapper {
+.topWrapper {
+  display: flex;
+  justify-content: space-around;
+}
+.optionWrapper {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .sizeInputs {
@@ -242,6 +327,12 @@ export default {
 
 .button {
   margin-top: 0.5rem;
+  min-width: 90px;
+}
+
+.fileInput {
+  border: 1px gray solid;
+  padding: 3px;
 }
 
 .toolsAndMapWrapper {
