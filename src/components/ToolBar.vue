@@ -53,10 +53,17 @@
         </button>
         <button
           class="button"
-          @click="changePlacing('mutant')"
-          :disabled="isSelected('mutant')"
+          @click="changePlacing('normal')"
+          :disabled="isSelected('normal')"
         >
-          Mutant
+          Normal Mutant
+        </button>
+        <button
+          class="button"
+          @click="changePlacing('acute')"
+          :disabled="isSelected('acute')"
+        >
+          Acute Mutant
         </button>
         <button
           class="button"
@@ -101,7 +108,7 @@ export default {
   },
   methods: {
     // update what the user can place on mouse click
-    // type can be "floor", "wall", "goal", "door", "player", "mutant", "brick", "bomb", or "key"
+    // type can be "floor", "wall", "goal", "door", "player", "normal", "acute", "brick", "bomb", or "key"
     changePlacing(type) {
       this.typePlacing = type;
       this.$emit("update-tile-placing", type);
@@ -127,6 +134,7 @@ export default {
 }
 .button {
   margin-left: 1rem;
+  margin-top: 0.5rem;
 }
 .button:first-child {
   margin-left: 0;

@@ -21,7 +21,8 @@
           class="image"
           :class="{
             player: isTileType(r, c, 'player'),
-            mutant: isTileType(r, c, 'mutant'),
+            normal: isTileType(r, c, 'normal'),
+            acute: isTileType(r, c, 'acute'),
             bomb: isTileType(r, c, 'bomb'),
             brick: isTileType(r, c, 'brick'),
             key: isTileType(r, c, 'key'),
@@ -151,8 +152,13 @@ export default {
   background-image: url("~@/assets/player.png");
 }
 
-.mutant {
+.normal {
   background-image: url("~@/assets/mutant.png");
+}
+
+.acute {
+  background-image: url("~@/assets/mutant.png");
+  filter: brightness(50%);
 }
 
 .brick {

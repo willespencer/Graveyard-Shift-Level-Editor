@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <h1 class="title">Level Editor</h1>
-    <h4 class="version">Version 1.0</h4>
+    <h4 class="version">Version {{ version }}</h4>
     <div class="topWrapper" v-if="!displayMap">
       <div class="optionWrapper">
         <h3>New Level</h3>
@@ -68,7 +68,7 @@ const stringify = require("json-stringify-pretty-compact");
 
 // UPDATE THE VERSION NUMBER WHEN THE JSON CHANGES
 // TODO - convert old versions to new versions somehow
-const versionNumber = "1.0";
+const versionNumber = "1.1";
 
 export default {
   components: { LevelMap, ToolBar },
@@ -83,6 +83,7 @@ export default {
       typePlacing: "floor",
       tiles: [],
       inputTiles: [],
+      version: versionNumber,
     };
   },
   computed: {
@@ -156,8 +157,9 @@ export default {
       // copy player mutants in
       let mutantSpawns = json.metadata["mutant-spawns"];
       for (let i = 0; i < mutantSpawns.length; i++) {
-        let position = mutantSpawns[i];
-        tiles[this.height - position[1] - 1][position[0]] = "mutant";
+        let position = mutantSpawns[i].position;
+        let type = mutantSpawns[i].type.toLowerCase();
+        tiles[this.height - position[1] - 1][position[0]] = type;
       }
 
       let playerSpawn = json.metadata["player-spawn"];
@@ -198,9 +200,10 @@ export default {
     // create the json based on the map and call the output method
     writeJSON() {
       let json = {};
-      json["version"] = versionNumber;
+      json["version"] = this.version;
 
-      let mutantSpawns = this.findObjects("mutant");
+      let normalMutantSpawns = this.findObjects("normal");
+      let acuteMutantSpawns = this.findObjects("acute");
       let brickSpawns = this.findObjects("brick");
       let bombSpawns = this.findObjects("bomb");
       let keySpawns = this.findObjects("key");
@@ -208,6 +211,10 @@ export default {
         brickSpawns,
         bombSpawns,
         keySpawns
+      );
+      let mutantSpawns = this.generateMutantSpawns(
+        normalMutantSpawns,
+        acuteMutantSpawns
       );
 
       // set metadata
@@ -301,6 +308,26 @@ export default {
       });
 
       return itemSpawns;
+    },
+    // generate the json representation of mutant spawns based on their type
+    // TODO - code is repetitive with generateItemSpawns, combine
+    generateMutantSpawns(normal, acute) {
+      let mutantSpawns = [];
+      normal.forEach((m) => {
+        let mutant = {};
+        mutant.type = "NORMAL";
+        mutant.position = m;
+        mutantSpawns.push(mutant);
+      });
+
+      acute.forEach((m) => {
+        let mutant = {};
+        mutant.type = "ACUTE";
+        mutant.position = m;
+        mutantSpawns.push(mutant);
+      });
+
+      return mutantSpawns;
     },
   },
 };
