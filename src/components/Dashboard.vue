@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard">
-    <h1>Level Editor</h1>
+    <h1 class="title">Level Editor</h1>
+    <h4 class="version">Version 1.0</h4>
     <div class="topWrapper" v-if="!displayMap">
       <div class="optionWrapper">
         <h3>New Level</h3>
@@ -63,6 +64,7 @@
 <script>
 import LevelMap from "@/components/LevelMap.vue";
 import ToolBar from "@/components/ToolBar.vue";
+const stringify = require("json-stringify-pretty-compact");
 
 // UPDATE THE VERSION NUMBER WHEN THE JSON CHANGES
 // TODO - convert old versions to new versions somehow
@@ -234,7 +236,7 @@ export default {
     // output json to a file with provided level number and automatically download it to the user's computer
     outputJSONToFile(json) {
       // code source: https://stackoverflow.com/questions/48611671/vue-js-write-json-object-to-local-file
-      const data = JSON.stringify(json);
+      const data = stringify(json, null, 2);
       const blob = new Blob([data], { type: "text/plain" });
       const e = document.createEvent("MouseEvents"),
         a = document.createElement("a");
@@ -305,6 +307,14 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  margin-bottom: 0;
+}
+
+.version {
+  margin-top: 0;
+}
+
 .topWrapper {
   display: flex;
   justify-content: space-around;
