@@ -27,6 +27,13 @@
         </button>
         <button
           class="button"
+          @click="changePlacing('barrel')"
+          :disabled="isSelected('barrel')"
+        >
+          Barrel
+        </button>
+        <button
+          class="button"
           @click="changePlacing('grate')"
           :disabled="isSelected('grate')"
         >
@@ -115,7 +122,7 @@ export default {
   },
   methods: {
     // update what the user can place on mouse click
-    // type can be "floor", "wall", "goal", "grate", "door", "player", "normal", "acute", "brick", "bomb", or "key"
+    // type can be "floor", "wall", "goal", "grate", "barrel", "door", "player", "normal", "acute", "brick", "bomb", or "key"
     changePlacing(type) {
       this.typePlacing = type;
       this.$emit("update-tile-placing", type);
