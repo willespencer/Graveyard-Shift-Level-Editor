@@ -179,6 +179,8 @@ export default {
         return "door";
       } else if (num == 4) {
         return "goal";
+      } else if (num == 7) {
+        return "grate";
       } else {
         return "floor";
       }
@@ -193,6 +195,8 @@ export default {
         return 5;
       } else if (tile == "goal") {
         return 4;
+      } else if (tile == "grate") {
+        return 7;
       } else {
         return 0;
       }

@@ -11,6 +11,7 @@
           glass: isTileType(r, c, 'glass'),
           door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
+          grate: isTileType(r, c, 'grate'),
         }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
@@ -35,7 +36,7 @@
 
 <script>
 // TODO update with more types as they get added to the game
-const tileTypes = ["floor", "wall", "glass", "goal", "door"];
+const tileTypes = ["floor", "wall", "glass", "goal", "door", "grate"];
 
 export default {
   props: {
@@ -141,6 +142,10 @@ export default {
 
 .goal {
   background-image: url("~@/assets/goal.png");
+}
+
+.grate {
+  background-image: url("~@/assets/floorgrate.png");
 }
 
 .image {

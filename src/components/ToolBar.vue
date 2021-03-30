@@ -27,6 +27,13 @@
         </button>
         <button
           class="button"
+          @click="changePlacing('grate')"
+          :disabled="isSelected('grate')"
+        >
+          Grate
+        </button>
+        <button
+          class="button"
           @click="changePlacing('glass')"
           :disabled="isSelected('glass')"
         >
