@@ -121,8 +121,7 @@ export default {
     };
   },
   methods: {
-    // update what the user can place on mouse click
-    // type can be "floor", "wall", "goal", "grate", "barrel", "door", "player", "normal", "acute", "brick", "bomb", or "key"
+    // update what the user can place on mouse click, can be any of the types from the above buttons
     changePlacing(type) {
       this.typePlacing = type;
       this.$emit("update-tile-placing", type);

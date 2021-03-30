@@ -12,23 +12,16 @@
           door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
           grate: isTileType(r, c, 'grate'),
-          barrel: isTileType(r, c, 'barrel')
         }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
         @mouseup="up()"
       >
-        <div
+        <img
           v-if="!isTile(r, c)"
+          :src="getImage(r, c)"
           class="image"
-          :class="{
-            player: isTileType(r, c, 'player'),
-            normal: isTileType(r, c, 'normal'),
-            acute: isTileType(r, c, 'acute'),
-            bomb: isTileType(r, c, 'bomb'),
-            brick: isTileType(r, c, 'brick'),
-            key: isTileType(r, c, 'key'),
-          }"
+          :class="{ acute: isTileType(r, c, 'acute') }"
         />
       </div>
     </div>
@@ -37,7 +30,17 @@
 
 <script>
 // TODO update with more types as they get added to the game
-const tileTypes = ["floor", "wall", "glass", "goal", "door", "grate", "barreL"];
+
+// types of tiles that show up by themselves
+const tileTypes = ["floor", "wall", "glass", "goal", "door", "grate"];
+
+// other images that show up in front of floor tiles (including objects, barrels, etc.)
+import playerImage from "@/assets/player.png";
+import mutantImage from "@/assets/mutant.png";
+import barrelImage from "@/assets/barrel.png";
+import brickImage from "@/assets/brick.png";
+import bombImage from "@/assets/bomb.png";
+import keyImage from "@/assets/key.png";
 
 export default {
   props: {
@@ -104,6 +107,27 @@ export default {
       this.$set(this.tileTypes, r, newRow);
       this.$emit("tile-changed", this.tileTypes);
     },
+    // for objects or tiles that show up in front of the floor, get the image src
+    getImage(r, c) {
+      if (this.isTileType(r, c, "player")) {
+        console.log("player");
+        return playerImage;
+      } else if (this.isTileType(r, c, "normal")) {
+        return mutantImage;
+      } else if (this.isTileType(r, c, "acute")) {
+        return mutantImage;
+      } else if (this.isTileType(r, c, "bomb")) {
+        return bombImage;
+      } else if (this.isTileType(r, c, "key")) {
+        return keyImage;
+      } else if (this.isTileType(r, c, "brick")) {
+        return brickImage;
+      } else if (this.isTileType(r, c, "barrel")) {
+        return barrelImage;
+      }
+
+      return null;
+    },
   },
 };
 </script>
@@ -145,41 +169,16 @@ export default {
   background-image: url("~@/assets/goal.png");
 }
 
-.barrel {
-  background-image: url("~@/assets/barrel.png");
-}
-
 .grate {
   background-image: url("~@/assets/floorgrate.png");
 }
 
 .image {
-  width: 60px;
-  height: 60px;
-}
-
-.player {
-  background-image: url("~@/assets/player.png");
-}
-
-.normal {
-  background-image: url("~@/assets/mutant.png");
+  max-width: 60px;
+  max-height: 60px;
 }
 
 .acute {
-  background-image: url("~@/assets/mutant.png");
   filter: brightness(50%);
-}
-
-.brick {
-  background-image: url("~@/assets/brick.png");
-}
-
-.bomb {
-  background-image: url("~@/assets/bomb.png");
-}
-
-.key {
-  background-image: url("~@/assets/key.png");
 }
 </style>
