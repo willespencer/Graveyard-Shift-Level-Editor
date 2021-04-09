@@ -2,7 +2,7 @@
   <div class="dashboard">
     <h1 class="title">Level Editor</h1>
     <h4 class="version">Version {{ version }}</h4>
-    <div class="topWrapper" v-if="!displayMap">
+    <div class="topWrapper">
       <div class="optionWrapper">
         <h3>New Level</h3>
         <span>What size should the level be (in tiles, width x height)?</span>
@@ -23,8 +23,7 @@
     <div class="toolsAndMapWrapper" v-if="displayMap">
       <tool-bar @update-tile-placing="updateTilePlacing" />
       <level-map
-        :height="height"
-        :width="width"
+        :dimensions="dimensions"
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
         @tile-changed="updateTiles"
@@ -84,6 +83,7 @@ export default {
       tiles: [],
       inputTiles: [],
       version: versionNumber,
+      dimensions: [0, 0],
     };
   },
   computed: {
@@ -103,6 +103,7 @@ export default {
     updateDimensions() {
       this.width = Number(this.cols);
       this.height = Number(this.rows);
+      this.dimensions = [this.width, this.height];
       this.displayMap = true;
     },
     // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
@@ -134,6 +135,9 @@ export default {
       // set width and height
       this.width = json.metadata.width;
       this.height = json.metadata.height;
+      this.cols = this.width;
+      this.rows = this.height;
+      this.dimensions = [this.width, this.height];
 
       // copy tile layout in
       let jsonLayout = json.layout;
@@ -282,8 +286,8 @@ export default {
     // TODO - added transforms to here and other methods to match json, maybe json file should be changed
     findObjects(objectType) {
       let objectList = [];
-      for (let r = 0; r < this.height; r++) {
-        for (let c = 0; c < this.width; c++) {
+      for (let r = 0; r < this.tiles.length; r++) {
+        for (let c = 0; c < this.tiles[0].length; c++) {
           if (this.tiles[r][c] === objectType) {
             objectList.push([c, this.height - r - 1]);
           }

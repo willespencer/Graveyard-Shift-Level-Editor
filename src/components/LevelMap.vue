@@ -44,13 +44,13 @@ import keyImage from "@/assets/key.png";
 
 export default {
   props: {
-    height: Number,
-    width: Number,
+    dimensions: Array,
     typeToPlace: String,
     inputTiles: Array,
+    editedMap: Boolean,
   },
   data() {
-    // if tilea inputted (i.e. map loaded), display that instead of the default map
+    // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
     if (this.inputTiles.length > 0) {
       tiles = this.inputTiles;
@@ -62,6 +62,46 @@ export default {
   },
   created() {
     this.createTileTypes();
+  },
+  computed: {
+    width() {
+      return this.dimensions[0];
+    },
+    height() {
+      return this.dimensions[1];
+    },
+  },
+  // if size was edited, update tile types
+  watch: {
+    dimensions: {
+      immediate: true,
+      handler(val, oldVal) {
+        // if this is the first time dimensions are set, ignore handler
+        if (!oldVal) {
+          return;
+        }
+
+        let newTiles = [];
+        for (let r = 0; r < val[1]; r++) {
+          newTiles.push([]);
+          for (let c = 0; c < val[0]; c++) {
+            // place a wall if it is an edge of the map, the existing tile if it is in the old range, otherwise place the floor
+            if (r === 0 || r === val[1] - 1) {
+              newTiles[r].push("wall");
+            } else if (c === 0 || c === val[0] - 1) {
+              newTiles[r].push("wall");
+            } else if (r < oldVal[1] && c < oldVal[0]) {
+              newTiles[r].push(this.tileTypes[r][c]);
+            } else {
+              newTiles[r].push("floor");
+            }
+          }
+        }
+
+        this.tileTypes = newTiles;
+        this.$emit("tile-changed", this.tileTypes);
+      },
+    },
   },
   methods: {
     down(r, c) {
@@ -110,7 +150,6 @@ export default {
     // for objects or tiles that show up in front of the floor, get the image src
     getImage(r, c) {
       if (this.isTileType(r, c, "player")) {
-        console.log("player");
         return playerImage;
       } else if (this.isTileType(r, c, "normal")) {
         return mutantImage;
