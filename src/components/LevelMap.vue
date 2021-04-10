@@ -11,10 +11,14 @@
         @mouseup="up()"
       >
         <img
-          v-if="!isTile(r, c)"
+          v-if="!isTile(r, c) || isTopWall(r, c)"
           :src="getForegroundImage(r, c)"
           class="image"
-          :class="{ acute: isTileType(r, c, 'acute') }"
+          :class="{
+            acute: isTileType(r, c, 'acute'),
+            wall: isTileType(r, c, 'wall'),
+            topWall: isTopWall(r, c),
+          }"
         />
       </div>
     </div>
@@ -24,8 +28,8 @@
 <script>
 // TODO update with more types as they get added to the game
 
-// types of tiles that show up by themselves
-const tileTypes = ["floor", "wall", "goal", "grate", "cracked"];
+// types of tiles that show up by themselves. Excludes wall because of other wall types
+const foregroundList = ["floor", "goal", "grate", "cracked"];
 
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
@@ -149,9 +153,9 @@ export default {
     isTileType(r, c, type) {
       return this.tileTypes[r][c] === type;
     },
-    // return true if a type is a tile
+    // return true if a type is a tile that shows up in the foreground
     isTile(r, c) {
-      return tileTypes.includes(this.tileTypes[r][c]);
+      return foregroundList.includes(this.tileTypes[r][c]);
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
@@ -162,14 +166,14 @@ export default {
     },
     // gets the src of applicable tiles. If there is an object on this space, returns a floor
     getBackgroundImage(r, c) {
-      if (this.isTileType(r, c, "wall")) {
-        return this.getWallImage(r, c);
-      } else if (this.isTileType(r, c, "goal")) {
+      if (this.isTileType(r, c, "goal")) {
         return goalImage;
       } else if (this.isTileType(r, c, "grate")) {
         return grateImage;
       } else if (this.isTileType(r, c, "cracked")) {
         return crackedImage;
+      } else if (this.isTileType(r, c, "wall")) {
+        return wallImage;
       } else {
         return floorImage;
       }
@@ -178,6 +182,8 @@ export default {
     getForegroundImage(r, c) {
       if (this.isTileType(r, c, "player")) {
         return playerImage;
+      } else if (this.isTileType(r, c, "wall")) {
+        return this.getWallImage(r, c);
       } else if (this.isTileType(r, c, "normal")) {
         return mutantImage;
       } else if (this.isTileType(r, c, "acute")) {
@@ -202,6 +208,8 @@ export default {
         } else {
           return glassImage;
         }
+      } else if (this.isTileType(r, c, "floor")) {
+        return wallTop;
       }
 
       return null;
@@ -229,11 +237,17 @@ export default {
         !this.isTileType(r + 1, c, "wall")
       ) {
         return wallSide;
-      } else if (r - 1 >= 0 && this.isTileType(r - 1, c, "floor")) {
-        return wallTop;
       } else {
         return wallImage;
       }
+    },
+    // returns true if the floor should display a top wall image on the bottom
+    isTopWall(r, c) {
+      return (
+        r + 1 < this.tileTypes.length &&
+        this.isTileType(r, c, "floor") &&
+        this.isTileType(r + 1, c, "wall")
+      );
     },
   },
 };
@@ -255,6 +269,7 @@ export default {
   height: 45px;
   width: 45px;
   background-size: cover;
+  position: relative;
 }
 
 .image {
@@ -264,5 +279,19 @@ export default {
 
 .acute {
   filter: brightness(50%);
+}
+
+.wall {
+  padding-top: 12px;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+}
+
+.topWall {
+  padding-top: 34px;
+  position: absolute;
+  left: 0;
+  z-index: 2;
 }
 </style>
