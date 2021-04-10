@@ -12,6 +12,7 @@
           door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
           grate: isTileType(r, c, 'grate'),
+          cracked: isTileType(r, c, 'cracked'),
         }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
@@ -32,7 +33,15 @@
 // TODO update with more types as they get added to the game
 
 // types of tiles that show up by themselves
-const tileTypes = ["floor", "wall", "glass", "goal", "door", "grate"];
+const tileTypes = [
+  "floor",
+  "wall",
+  "glass",
+  "goal",
+  "door",
+  "grate",
+  "cracked",
+];
 
 // other images that show up in front of floor tiles (including objects, barrels, etc.)
 import playerImage from "@/assets/player.png";
@@ -199,6 +208,10 @@ export default {
 
 .glass {
   background-image: url("~@/assets/glass.png");
+}
+
+.cracked {
+  background-image: url("~@/assets/cracked.png");
 }
 
 .door {

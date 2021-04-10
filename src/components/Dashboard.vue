@@ -184,17 +184,19 @@ export default {
     },
     // converts the number representation of a tile in the game to the label in the editor
     convertNumberToTile(num) {
-      if (num == 1) {
+      if (num === 1) {
         return "wall";
-      } else if (num == 2) {
+      } else if (num === 2) {
         return "glass";
-      } else if (num == 5) {
-        return "door";
-      } else if (num == 4) {
+      } else if (num === 3) {
+        return "cracked";
+      } else if (num === 4) {
         return "goal";
-      } else if (num == 6) {
+      } else if (num === 5) {
+        return "door";
+      } else if (num === 6) {
         return "barrel";
-      } else if (num == 7) {
+      } else if (num === 7) {
         return "grate";
       } else {
         return "floor";
@@ -202,17 +204,19 @@ export default {
     },
     // converts the tile name in the editor to the number representation of a tile in the game
     convertTileToNumber(tile) {
-      if (tile == "wall") {
+      if (tile === "wall") {
         return 1;
-      } else if (tile == "glass") {
+      } else if (tile === "glass") {
         return 2;
-      } else if (tile == "door") {
-        return 5;
-      } else if (tile == "goal") {
+      } else if (tile === "cracked") {
+        return 3;
+      } else if (tile === "goal") {
         return 4;
-      } else if (tile == "barrel") {
+      } else if (tile === "door") {
+        return 5;
+      } else if (tile === "barrel") {
         return 6;
-      } else if (tile == "grate") {
+      } else if (tile === "grate") {
         return 7;
       } else {
         return 0;

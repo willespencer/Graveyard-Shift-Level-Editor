@@ -88,7 +88,7 @@
       </div>
     </div>
     <div>
-      <div class="section">Objects</div>
+      <div class="section">Characters</div>
       <div class="buttons">
         <div class="item">
           <button
