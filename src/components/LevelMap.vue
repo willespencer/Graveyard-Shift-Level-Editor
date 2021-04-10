@@ -5,20 +5,14 @@
         class="col"
         v-for="(col, c) in width"
         v-bind:key="c"
-        :class="{
-          floor: isTileType(r, c, 'floor') || !isTile(r, c),
-          wall: isTileType(r, c, 'wall'),
-          goal: isTileType(r, c, 'goal'),
-          grate: isTileType(r, c, 'grate'),
-          cracked: isTileType(r, c, 'cracked'),
-        }"
+        :style="{ backgroundImage: 'url(' + getBackgroundImage(r, c) + ')' }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
         @mouseup="up()"
       >
         <img
           v-if="!isTile(r, c)"
-          :src="getImage(r, c)"
+          :src="getForegroundImage(r, c)"
           class="image"
           :class="{ acute: isTileType(r, c, 'acute') }"
         />
@@ -35,6 +29,13 @@ const tileTypes = ["floor", "wall", "goal", "grate", "cracked"];
 
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
+
+// images that show up in as a background image / tile
+import floorImage from "@/assets/floor.png";
+import wallImage from "@/assets/walltop.png";
+import goalImage from "@/assets/goal.png";
+import grateImage from "@/assets/floorgrate.png";
+import crackedImage from "@/assets/cracked.png";
 
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
@@ -58,12 +59,14 @@ export default {
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
+    let tempImage = playerImage;
     if (this.inputTiles.length > 0) {
       tiles = this.inputTiles;
     }
     return {
       tileTypes: tiles,
       isMouseDown: false,
+      tempImage,
     };
   },
   created() {
@@ -153,8 +156,22 @@ export default {
       this.$set(this.tileTypes, r, newRow);
       this.$emit("tile-changed", this.tileTypes);
     },
+    // gets the src of applicable tiles. If there is an object on this space, returns a floor
+    getBackgroundImage(r, c) {
+      if (this.isTileType(r, c, "wall")) {
+        return wallImage;
+      } else if (this.isTileType(r, c, "goal")) {
+        return goalImage;
+      } else if (this.isTileType(r, c, "grate")) {
+        return grateImage;
+      } else if (this.isTileType(r, c, "cracked")) {
+        return crackedImage;
+      } else {
+        return floorImage;
+      }
+    },
     // for objects or tiles that show up in front of the floor, get the image src
-    getImage(r, c) {
+    getForegroundImage(r, c) {
       if (this.isTileType(r, c, "player")) {
         return playerImage;
       } else if (this.isTileType(r, c, "normal")) {
@@ -214,30 +231,6 @@ export default {
   height: 45px;
   width: 45px;
   background-size: cover;
-}
-
-.floor {
-  background-image: url("~@/assets/floor.png");
-}
-
-.wall {
-  background-image: url("~@/assets/walltop.png");
-}
-
-.glass {
-  background-image: url("~@/assets/glass.png");
-}
-
-.cracked {
-  background-image: url("~@/assets/cracked.png");
-}
-
-.goal {
-  background-image: url("~@/assets/goal.png");
-}
-
-.grate {
-  background-image: url("~@/assets/floorgrate.png");
 }
 
 .image {
