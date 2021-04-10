@@ -37,6 +37,10 @@ import goalImage from "@/assets/goal.png";
 import grateImage from "@/assets/floorgrate.png";
 import crackedImage from "@/assets/cracked.png";
 
+// other types of walls
+import wallTop from "@/assets/walltopshort.png";
+import wallSide from "@/assets/wallside.png";
+
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
@@ -159,7 +163,7 @@ export default {
     // gets the src of applicable tiles. If there is an object on this space, returns a floor
     getBackgroundImage(r, c) {
       if (this.isTileType(r, c, "wall")) {
-        return wallImage;
+        return this.getWallImage(r, c);
       } else if (this.isTileType(r, c, "goal")) {
         return goalImage;
       } else if (this.isTileType(r, c, "grate")) {
@@ -217,6 +221,19 @@ export default {
       }
 
       return false;
+    },
+    // returns the wall image depending on the surrounding tiles per game logic
+    getWallImage(r, c) {
+      if (
+        r + 1 >= this.tileTypes.length ||
+        !this.isTileType(r + 1, c, "wall")
+      ) {
+        return wallSide;
+      } else if (r - 1 >= 0 && this.isTileType(r - 1, c, "floor")) {
+        return wallTop;
+      } else {
+        return wallImage;
+      }
     },
   },
 };
