@@ -184,8 +184,9 @@ export default {
 }
 
 .col {
-  height: 60px;
-  width: 60px;
+  height: 45px;
+  width: 45px;
+  background-size: cover;
 }
 
 .floor {
@@ -213,8 +214,8 @@ export default {
 }
 
 .image {
-  max-width: 60px;
-  max-height: 60px;
+  max-width: 45px;
+  max-height: 45px;
 }
 
 .acute {
