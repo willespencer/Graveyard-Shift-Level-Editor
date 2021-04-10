@@ -8,8 +8,6 @@
         :class="{
           floor: isTileType(r, c, 'floor') || !isTile(r, c),
           wall: isTileType(r, c, 'wall'),
-          glass: isTileType(r, c, 'glass'),
-          door: isTileType(r, c, 'door'),
           goal: isTileType(r, c, 'goal'),
           grate: isTileType(r, c, 'grate'),
           cracked: isTileType(r, c, 'cracked'),
@@ -33,20 +31,14 @@
 // TODO update with more types as they get added to the game
 
 // types of tiles that show up by themselves
-const tileTypes = [
-  "floor",
-  "wall",
-  "glass",
-  "goal",
-  "door",
-  "grate",
-  "cracked",
-];
+const tileTypes = ["floor", "wall", "goal", "grate", "cracked"];
 
-// other images that show up in front of floor tiles (including objects, barrels, etc.)
+// other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
 import barrelImage from "@/assets/barrel.png";
+import doorImage from "@/assets/door.png";
+import glassImage from "@/assets/glass.png";
 import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
@@ -172,6 +164,10 @@ export default {
         return brickImage;
       } else if (this.isTileType(r, c, "barrel")) {
         return barrelImage;
+      } else if (this.isTileType(r, c, "door")) {
+        return doorImage;
+      } else if (this.isTileType(r, c, "glass")) {
+        return glassImage;
       }
 
       return null;
@@ -212,10 +208,6 @@ export default {
 
 .cracked {
   background-image: url("~@/assets/cracked.png");
-}
-
-.door {
-  background-image: url("~@/assets/door.png");
 }
 
 .goal {
