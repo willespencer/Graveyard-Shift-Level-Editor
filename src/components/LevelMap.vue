@@ -33,12 +33,17 @@
 // types of tiles that show up by themselves
 const tileTypes = ["floor", "wall", "goal", "grate", "cracked"];
 
+// types of tiles that can act as walls for doors/glass to attach to
+const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
+
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
 import barrelImage from "@/assets/barrel.png";
 import doorImage from "@/assets/door.png";
+import doorSideImage from "@/assets/door_side.png";
 import glassImage from "@/assets/glass.png";
+import glassSideImage from "@/assets/glass_side.png";
 import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
@@ -165,12 +170,29 @@ export default {
       } else if (this.isTileType(r, c, "barrel")) {
         return barrelImage;
       } else if (this.isTileType(r, c, "door")) {
-        return doorImage;
+        if (this.shouldDisplaySide(r, c)) {
+          return doorSideImage;
+        } else {
+          return doorImage;
+        }
       } else if (this.isTileType(r, c, "glass")) {
-        return glassImage;
+        if (this.shouldDisplaySide(r, c)) {
+          return glassSideImage;
+        } else {
+          return glassImage;
+        }
       }
 
       return null;
+    },
+    // returns true for objects that should show up in their side profile form like glass and doors
+    // this specifically occurs if a non-floor tile is above this object
+    shouldDisplaySide(r, c) {
+      // false if the tile above is out of bounds
+      if (r - 1 < 0) {
+        return false;
+      }
+      return wallTypes.includes(this.tileTypes[r - 1][c]);
     },
   },
 };
