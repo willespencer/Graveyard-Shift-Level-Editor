@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <h1 class="title">Level Editor</h1>
-    <h4 class="version">Version {{ version }}</h4>
+    <h4 class="version">File Version {{ version }}</h4>
     <div class="topWrapper">
       <div class="optionWrapper">
         <h3>New Level</h3>
@@ -21,8 +21,9 @@
       </div>
     </div>
     <div class="toolsAndMapWrapper" v-if="displayMap">
-      <tool-bar @update-tile-placing="updateTilePlacing" />
+      <tool-bar class="toolbar" @update-tile-placing="updateTilePlacing" />
       <level-map
+        class="map"
         :dimensions="dimensions"
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
@@ -34,6 +35,14 @@
       <input class="input" v-model="levelNumber" />
       <button @click="writeJSON" :disabled="!areRulesMet">Output File</button>
       <div class="instructions">
+        <h3 class="instructionsTitle">Rules</h3>
+        <ol class="instructionsList">
+          <li>There must be exactly 1 player on the level</li>
+          <li>There must be exactly 1 goal on the level</li>
+        </ol>
+        <span
+          >If these rules are not followed, level cannot be downloaded!</span
+        >
         <h3 class="instructionsTitle">
           Instructions For Downloading and Playing the Level
         </h3>
@@ -386,7 +395,18 @@ export default {
 
 .toolsAndMapWrapper {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.toolbar {
+  margin-left: 5rem;
+}
+
+.map {
+  margin-right: 5rem;
 }
 
 .outputWrapper {
