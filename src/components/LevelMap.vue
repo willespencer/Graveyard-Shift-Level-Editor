@@ -203,13 +203,20 @@ export default {
       return null;
     },
     // returns true for objects that should show up in their side profile form like glass and doors
-    // this specifically occurs if a non-floor tile is above this object
+    // this specifically occurs if a non-floor tile is above or below this object
     shouldDisplaySide(r, c) {
-      // false if the tile above is out of bounds
-      if (r - 1 < 0) {
-        return false;
+      // true if the tile abvoe is in bounds and is a wall type
+      if (r - 1 >= 0 && wallTypes.includes(this.tileTypes[r - 1][c])) {
+        return true;
+        // true if the tile below is in bounds and a wall type
+      } else if (
+        r + 1 < this.tileTypes.length &&
+        wallTypes.includes(this.tileTypes[r + 1][c])
+      ) {
+        return true;
       }
-      return wallTypes.includes(this.tileTypes[r - 1][c]);
+
+      return false;
     },
   },
 };
