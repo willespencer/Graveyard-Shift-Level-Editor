@@ -27,6 +27,7 @@
         :dimensions="dimensions"
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
+        :inputObjects="inputObjects"
         @tile-changed="updateTilesAndObjects"
       />
     </div>
@@ -95,6 +96,7 @@ export default {
       tiles: [],
       objects: [],
       inputTiles: [],
+      inputObkects: [],
       version: versionNumber,
       dimensions: [0, 0],
     };
@@ -165,11 +167,14 @@ export default {
       }
 
       // copy item spawns in
+      let objects = new Array(this.height)
+        .fill(0)
+        .map(() => new Array(this.width).fill("empty"));
       let itemSpawns = json.metadata["item-spawns"];
       for (let i = 0; i < itemSpawns.length; i++) {
         let position = itemSpawns[i].position;
         let type = itemSpawns[i].type.toLowerCase();
-        tiles[this.height - position[1] - 1][position[0]] = type;
+        objects[this.height - position[1] - 1][position[0]] = type;
       }
 
       // copy player mutants in
@@ -177,14 +182,15 @@ export default {
       for (let i = 0; i < mutantSpawns.length; i++) {
         let position = mutantSpawns[i].position;
         let type = mutantSpawns[i].type.toLowerCase();
-        tiles[this.height - position[1] - 1][position[0]] = type;
+        objects[this.height - position[1] - 1][position[0]] = type;
       }
 
       let playerSpawn = json.metadata["player-spawn"];
-      tiles[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
+      objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
 
       // set input tiles and display the map
       this.inputTiles = tiles;
+      this.inputObjects = objects;
       this.displayMap = true;
     },
     // converts the number representation of a tile in the game to the label in the editor

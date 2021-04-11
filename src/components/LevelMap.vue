@@ -67,20 +67,20 @@ export default {
     dimensions: Array,
     typeToPlace: String,
     inputTiles: Array,
+    inputObjects: Array,
     editedMap: Boolean,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
     let objects = [];
-    let tempImage = playerImage;
-    if (this.inputTiles.length > 0) {
+    if (this.inputTiles.length > 0 && this.inputObjects.length > 0) {
       tiles = this.inputTiles;
+      objects = this.inputObjects;
     }
     return {
       tileTypes: tiles,
       isMouseDown: false,
-      tempImage,
       objects,
     };
   },
