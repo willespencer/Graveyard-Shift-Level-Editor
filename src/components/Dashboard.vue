@@ -55,11 +55,10 @@
             After downloading, add the level to /core/assets/levels/
           </li>
           <li>
-            Set the maxLevels variable in GameplayController to this level
-            number.
+            Add an import for this new JSON file in /core/assets/assets.json
           </li>
           <li>
-            Add an import for this new JSON file in /core/assets/assets.json
+            Add a new level object in /core/assets/levels/levels.json
           </li>
           <li>
             After all of this, the level should be playable!
@@ -96,7 +95,7 @@ export default {
       tiles: [],
       objects: [],
       inputTiles: [],
-      inputObkects: [],
+      inputObjects: [],
       version: versionNumber,
       dimensions: [0, 0],
     };
