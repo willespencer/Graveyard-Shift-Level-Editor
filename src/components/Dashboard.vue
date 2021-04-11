@@ -27,7 +27,7 @@
         :dimensions="dimensions"
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
-        @tile-changed="updateTiles"
+        @tile-changed="updateTilesAndObjects"
       />
     </div>
     <div v-if="displayMap" class="outputWrapper">
@@ -78,6 +78,9 @@ const stringify = require("json-stringify-pretty-compact");
 // TODO - convert old versions to new versions somehow
 const versionNumber = "1.1";
 
+// types of objects - stored separatelly so that can be placed on other tiles
+const objectTypes = ["player", "normal", "acute", "key", "brick", "bomb"];
+
 export default {
   components: { LevelMap, ToolBar },
   data() {
@@ -90,6 +93,7 @@ export default {
       displayMap: false,
       typePlacing: "floor",
       tiles: [],
+      objects: [],
       inputTiles: [],
       version: versionNumber,
       dimensions: [0, 0],
@@ -116,8 +120,9 @@ export default {
       this.displayMap = true;
     },
     // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
-    updateTiles(tiles) {
+    updateTilesAndObjects(tiles, objects) {
       this.tiles = tiles;
+      this.objects = objects;
     },
     // update the tile being placed when a button is clicked on in ToolBar
     updateTilePlacing(type) {
@@ -299,9 +304,18 @@ export default {
     // TODO - added transforms to here and other methods to match json, maybe json file should be changed
     findObjects(objectType) {
       let objectList = [];
-      for (let r = 0; r < this.tiles.length; r++) {
-        for (let c = 0; c < this.tiles[0].length; c++) {
-          if (this.tiles[r][c] === objectType) {
+      let matrix = [];
+
+      // find by looking through object list or tile list depending on which it is
+      if (objectTypes.includes(objectType)) {
+        matrix = this.objects;
+      } else {
+        matrix = this.tiles;
+      }
+
+      for (let r = 0; r < matrix.length; r++) {
+        for (let c = 0; c < matrix[0].length; c++) {
+          if (matrix[r][c] === objectType) {
             objectList.push([c, this.height - r - 1]);
           }
         }

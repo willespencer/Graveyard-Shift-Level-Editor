@@ -34,6 +34,11 @@ const foregroundList = ["floor", "goal", "grate", "cracked"];
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
 
+// types of objects - stored separatelly so that can be placed on other tiles
+const objectTypes = ["player", "normal", "acute", "key", "brick", "bomb"];
+// types of tiles that can be placed on top of
+const pureTiles = ["floor", "grate"];
+
 // images that show up in as a background image / tile
 import floorImage from "@/assets/floor.png";
 import wallImage from "@/assets/walltop.png";
@@ -67,6 +72,7 @@ export default {
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
+    let objects = [];
     let tempImage = playerImage;
     if (this.inputTiles.length > 0) {
       tiles = this.inputTiles;
@@ -75,6 +81,7 @@ export default {
       tileTypes: tiles,
       isMouseDown: false,
       tempImage,
+      objects,
     };
   },
   created() {
@@ -116,7 +123,7 @@ export default {
         }
 
         this.tileTypes = newTiles;
-        this.$emit("tile-changed", this.tileTypes);
+        this.$emit("tile-changed", this.tileTypes, this.objects);
       },
     },
   },
@@ -137,6 +144,7 @@ export default {
     createTileTypes() {
       for (let r = 0; r < this.height; r++) {
         this.tileTypes.push([]);
+        this.objects.push([]);
         for (let c = 0; c < this.width; c++) {
           if (r === 0 || r === this.height - 1) {
             this.tileTypes[r].push("wall");
@@ -145,30 +153,63 @@ export default {
           } else {
             this.tileTypes[r].push("floor");
           }
+          // no matter what the tile is, set no object to be on top of it
+          this.objects[r].push("empty");
         }
       }
-      this.$emit("tile-changed", this.tileTypes);
+      this.$emit("tile-changed", this.tileTypes, this.objects);
     },
-    // checks if the tile at r, c is of type type
+    // checks if the tile at r, c is of type type, or if there is an object at r, c, if the object matches type
     isTileType(r, c, type) {
-      return this.tileTypes[r][c] === type;
+      let tile = this.tileTypes[r][c];
+      let object = this.objects[r][c];
+      if (object === "empty") {
+        return tile === type;
+      } else {
+        return object === type;
+      }
     },
-    // return true if a type is a tile that shows up in the foreground
+    // return true if a type is a tile that shows up in the foreground and there is no object
     isTile(r, c) {
-      return foregroundList.includes(this.tileTypes[r][c]);
+      return (
+        foregroundList.includes(this.tileTypes[r][c]) &&
+        this.objects[r][c] === "empty"
+      );
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
-      const newRow = this.tileTypes[r].slice(0);
-      newRow[c] = this.typeToPlace;
-      this.$set(this.tileTypes, r, newRow);
-      this.$emit("tile-changed", this.tileTypes);
+      // if it is an object, update object types (and switch background tile if needed)
+      if (objectTypes.includes(this.typeToPlace)) {
+        const newObjectRow = this.objects[r].slice(0);
+        newObjectRow[c] = this.typeToPlace;
+        this.$set(this.objects, r, newObjectRow);
+
+        // switch background to floor if not a pureType, otherwise keep it
+        if (!pureTiles.includes(this.tileTypes[r][c])) {
+          const newRow = this.tileTypes[r].slice(0);
+          newRow[c] = "floor";
+          this.$set(this.tileTypes, r, newRow);
+        }
+      } else {
+        // if not an object, set object to null and floor to type
+        const newRow = this.tileTypes[r].slice(0);
+        newRow[c] = this.typeToPlace;
+        this.$set(this.tileTypes, r, newRow);
+
+        const newObjectRow = this.objects[r].slice(0);
+        newObjectRow[c] = "empty";
+        this.$set(this.objects, r, newObjectRow);
+      }
+      this.$emit("tile-changed", this.tileTypes, this.objects);
     },
-    // gets the src of applicable tiles. If there is an object on this space, returns a floor
+    // gets the src of applicable tiles. If there is an object on this space, return whichever tile is below it
     getBackgroundImage(r, c) {
       if (this.isTileType(r, c, "goal")) {
         return goalImage;
-      } else if (this.isTileType(r, c, "grate")) {
+      } else if (
+        this.isTileType(r, c, "grate") ||
+        (this.objects[r][c] !== "empty" && this.tileTypes[r][c] === "grate")
+      ) {
         return grateImage;
       } else if (this.isTileType(r, c, "cracked")) {
         return crackedImage;
