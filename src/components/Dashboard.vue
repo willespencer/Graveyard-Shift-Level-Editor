@@ -290,6 +290,8 @@ export default {
         "player-spawn": this.findObjects("player").concat(
           this.findObjects("playerLeft")
         )[0],
+        "player-direction":
+          this.findObjects("player").length > 0 ? "RIGHT" : "LEFT",
         "mutant-count": mutantSpawns.length,
         "mutant-spawns": mutantSpawns,
         "item-count": itemSpawns.length,
