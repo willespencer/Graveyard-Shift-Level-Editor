@@ -28,6 +28,7 @@
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
         :inputObjects="inputObjects"
+        :levelLoading="levelLoading"
         @tile-changed="updateTilesAndObjects"
       />
     </div>
@@ -108,6 +109,7 @@ export default {
       inputObjects: [],
       version: versionNumber,
       dimensions: [0, 0],
+      levelLoading: false,
     };
   },
   computed: {
@@ -164,7 +166,6 @@ export default {
       this.height = json.metadata.height;
       this.cols = this.width;
       this.rows = this.height;
-      this.dimensions = [this.width, this.height];
 
       // copy tile layout in
       let jsonLayout = json.layout;
@@ -205,7 +206,6 @@ export default {
       // set player spawn and direction - default direction if not in JSON is right
       let playerSpawn = json.metadata["player-spawn"];
       let playerDirection = json.metadata["player-direction"] ?? "RIGHT";
-      console.log(playerDirection);
       if (playerDirection === "LEFT") {
         objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] =
           "playerLeft";
@@ -216,6 +216,14 @@ export default {
       // set input tiles and display the map
       this.inputTiles = tiles;
       this.inputObjects = objects;
+      this.tiles = this.inputTiles;
+      this.objects = this.inputObjects;
+
+      // set level loading to true so that the dimension watch handles setting tiles/objects properly
+      this.levelLoading = true;
+      this.dimensions = [this.width, this.height];
+      this.levelLoading = false;
+
       this.displayMap = true;
     },
     // converts the number representation of a tile in the game to the label in the editor

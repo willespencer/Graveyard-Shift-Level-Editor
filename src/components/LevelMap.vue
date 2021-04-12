@@ -80,7 +80,7 @@ export default {
     typeToPlace: String,
     inputTiles: Array,
     inputObjects: Array,
-    editedMap: Boolean,
+    levelLoading: Boolean,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
@@ -114,6 +114,11 @@ export default {
       handler(val, oldVal) {
         // if this is the first time dimensions are set, ignore handler
         if (!oldVal) {
+          return;
+          // if dimensions have been set before but level is being loaded in, set tiles/objects as input
+        } else if (!this.levelLoading) {
+          this.tileTypes = this.inputTiles;
+          this.objects = this.inputObjects;
           return;
         }
 
