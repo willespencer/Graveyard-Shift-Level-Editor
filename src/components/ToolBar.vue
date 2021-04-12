@@ -18,12 +18,12 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('wall')"
-            :disabled="isSelected('wall')"
+            @click="changePlacing('grate')"
+            :disabled="isSelected('grate')"
           >
-            <img class="buttonImage" src="@/assets/walltop.png" />
+            <img class="buttonImage" src="@/assets/floorgrate.png" />
           </button>
-          <span class="buttonText">Wall</span>
+          <span class="buttonText">Grate</span>
         </div>
         <div class="item">
           <button
@@ -38,22 +38,32 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('barrel')"
-            :disabled="isSelected('barrel')"
+            @click="changePlacing('wall')"
+            :disabled="isSelected('wall')"
           >
-            <img class="buttonImage" src="@/assets/barrel.png" />
+            <img class="buttonImage" src="@/assets/walltop.png" />
           </button>
-          <span class="buttonText">Barrel</span>
+          <span class="buttonText">Wall</span>
         </div>
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('grate')"
-            :disabled="isSelected('grate')"
+            @click="changePlacing('light')"
+            :disabled="isSelected('light')"
           >
-            <img class="buttonImage" src="@/assets/floorgrate.png" />
+            <img class="buttonImage" src="@/assets/wall_light.png" />
           </button>
-          <span class="buttonText">Grate</span>
+          <span class="buttonText">Light</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('cracked')"
+            :disabled="isSelected('cracked')"
+          >
+            <img class="buttonImage" src="@/assets/cracked.png" />
+          </button>
+          <span class="buttonText">Crack</span>
         </div>
         <div class="item">
           <button
@@ -68,6 +78,16 @@
         <div class="item">
           <button
             class="button"
+            @click="changePlacing('barrel')"
+            :disabled="isSelected('barrel')"
+          >
+            <img class="buttonImage" src="@/assets/barrel.png" />
+          </button>
+          <span class="buttonText">Barrel</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
             @click="changePlacing('door')"
             :disabled="isSelected('door')"
           >
@@ -75,22 +95,12 @@
           </button>
           <span class="buttonText">Door</span>
         </div>
-        <div class="item">
-          <button
-            class="button"
-            @click="changePlacing('cracked')"
-            :disabled="isSelected('cracked')"
-          >
-            <img class="buttonImage" src="@/assets/cracked.png" />
-          </button>
-          <span class="buttonText">Crack</span>
-        </div>
       </div>
     </div>
     <div>
       <div class="section">Characters</div>
       <div class="buttons">
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('player')"
@@ -100,7 +110,7 @@
           </button>
           <span class="buttonText">Player (Right)</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('normal')"
@@ -110,7 +120,7 @@
           </button>
           <span class="buttonText">Mutant (Right)</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('acute')"
@@ -120,7 +130,7 @@
           </button>
           <span class="buttonText">Acute (Right)</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('playerLeft')"
@@ -130,7 +140,7 @@
           </button>
           <span class="buttonText">Player (Left)</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('normalLeft')"
@@ -140,7 +150,7 @@
           </button>
           <span class="buttonText">Mutant (Left)</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('acuteLeft')"
@@ -153,7 +163,7 @@
       </div>
       <div class="section">Items</div>
       <div class="buttons">
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('key')"
@@ -163,7 +173,7 @@
           </button>
           <span class="buttonText">Key</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('brick')"
@@ -173,7 +183,7 @@
           </button>
           <span class="buttonText">Brick</span>
         </div>
-        <div class="item object">
+        <div class="item">
           <button
             class="button"
             @click="changePlacing('bomb')"
@@ -227,7 +237,9 @@ export default {
 .item {
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-top: 0.5rem;
+  flex-basis: 33.333333%;
 }
 .button {
   max-width: 40px;
@@ -248,10 +260,5 @@ export default {
 }
 .flipped {
   transform: scaleX(-1);
-}
-.object {
-  display: flex;
-  align-items: center;
-  flex-basis: 33.333333%;
 }
 </style>

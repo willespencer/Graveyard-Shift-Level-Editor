@@ -16,7 +16,7 @@
           class="image"
           :class="{
             acute: isTileType(r, c, 'acute') || isTileType(r, c, 'acuteLeft'),
-            wall: isTileType(r, c, 'wall'),
+            wall: isTileType(r, c, 'wall') || isTileType(r, c, 'light'),
             topWall: isTopWall(r, c),
             flipped: isFlipped(r, c),
           }"
@@ -29,11 +29,11 @@
 <script>
 // TODO update with more types as they get added to the game
 
-// types of tiles that show up by themselves. Excludes wall because of other wall types
+// types of tiles that show up by themselves. Excludes walls because of other wall types
 const foregroundList = ["floor", "goal", "grate", "cracked"];
 
 // types of tiles that can act as walls for doors/glass to attach to
-const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
+const wallTypes = ["wall", "glass", "cracked", "goal", "door", "light"];
 
 // types of objects - stored separately so that can be placed on other tiles
 const objectTypes = [
@@ -60,6 +60,7 @@ import crackedImage from "@/assets/cracked.png";
 // other types of walls
 import wallTop from "@/assets/walltopshort.png";
 import wallSide from "@/assets/wallside.png";
+import wallLight from "@/assets/wall_light.png";
 
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
@@ -228,7 +229,10 @@ export default {
         return grateImage;
       } else if (this.isTileType(r, c, "cracked")) {
         return crackedImage;
-      } else if (this.isTileType(r, c, "wall")) {
+      } else if (
+        this.isTileType(r, c, "wall") ||
+        this.isTileType(r, c, "light")
+      ) {
         return wallImage;
       } else {
         return floorImage;
@@ -243,6 +247,8 @@ export default {
         return playerImage;
       } else if (this.isTileType(r, c, "wall")) {
         return this.getWallImage(r, c);
+      } else if (this.isTileType(r, c, "light")) {
+        return wallLight;
       } else if (
         this.isTileType(r, c, "normal") ||
         this.isTileType(r, c, "normalLeft")
@@ -299,7 +305,8 @@ export default {
     getWallImage(r, c) {
       if (
         r + 1 >= this.tileTypes.length ||
-        !this.isTileType(r + 1, c, "wall")
+        (!this.isTileType(r + 1, c, "wall") &&
+          !this.isTileType(r + 1, c, "light"))
       ) {
         return wallSide;
       } else {
@@ -311,7 +318,8 @@ export default {
       return (
         r + 1 < this.tileTypes.length &&
         this.isTileType(r, c, "floor") &&
-        this.isTileType(r + 1, c, "wall")
+        (this.isTileType(r + 1, c, "wall") ||
+          this.isTileType(r + 1, c, "light"))
       );
     },
   },

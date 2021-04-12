@@ -234,6 +234,8 @@ export default {
         return "barrel";
       } else if (num === 7) {
         return "grate";
+      } else if (num === 8) {
+        return "light";
       } else {
         return "floor";
       }
@@ -254,6 +256,8 @@ export default {
         return 6;
       } else if (tile === "grate") {
         return 7;
+      } else if (tile === "light") {
+        return 8;
       } else {
         return 0;
       }
