@@ -90,7 +90,7 @@
     <div>
       <div class="section">Characters</div>
       <div class="buttons">
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('player')"
@@ -98,9 +98,9 @@
           >
             <img class="buttonImage" src="@/assets/player.png" />
           </button>
-          <span class="buttonText">Player</span>
+          <span class="buttonText">Player (Right)</span>
         </div>
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('normal')"
@@ -108,9 +108,9 @@
           >
             <img class="buttonImage" src="@/assets/mutant.png" />
           </button>
-          <span class="buttonText">Mutant</span>
+          <span class="buttonText">Mutant (Right)</span>
         </div>
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('acute')"
@@ -118,12 +118,42 @@
           >
             <img class="buttonImage acute" src="@/assets/mutant.png" />
           </button>
-          <span class="buttonText">Acute</span>
+          <span class="buttonText">Acute (Right)</span>
+        </div>
+        <div class="item object">
+          <button
+            class="button"
+            @click="changePlacing('playerLeft')"
+            :disabled="isSelected('playerLeft')"
+          >
+            <img class="buttonImage flipped" src="@/assets/player.png" />
+          </button>
+          <span class="buttonText">Player (Left)</span>
+        </div>
+        <div class="item object">
+          <button
+            class="button"
+            @click="changePlacing('normalLeft')"
+            :disabled="isSelected('normalLeft')"
+          >
+            <img class="buttonImage flipped" src="@/assets/mutant.png" />
+          </button>
+          <span class="buttonText">Mutant (Left)</span>
+        </div>
+        <div class="item object">
+          <button
+            class="button"
+            @click="changePlacing('acuteLeft')"
+            :disabled="isSelected('acuteLeft')"
+          >
+            <img class="buttonImage acute flipped" src="@/assets/mutant.png" />
+          </button>
+          <span class="buttonText">Acute (Left)</span>
         </div>
       </div>
       <div class="section">Items</div>
       <div class="buttons">
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('key')"
@@ -133,7 +163,7 @@
           </button>
           <span class="buttonText">Key</span>
         </div>
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('brick')"
@@ -143,7 +173,7 @@
           </button>
           <span class="buttonText">Brick</span>
         </div>
-        <div class="item">
+        <div class="item object">
           <button
             class="button"
             @click="changePlacing('bomb')"
@@ -207,6 +237,7 @@ export default {
 .buttonText {
   margin-top: 0.25rem;
   font-size: 12px;
+  max-width: 42px;
 }
 .buttonImage {
   width: 32px;
@@ -214,5 +245,13 @@ export default {
 }
 .acute {
   filter: brightness(50%);
+}
+.flipped {
+  transform: scaleX(-1);
+}
+.object {
+  display: flex;
+  align-items: center;
+  flex-basis: 33.333333%;
 }
 </style>

@@ -15,9 +15,10 @@
           :src="getForegroundImage(r, c)"
           class="image"
           :class="{
-            acute: isTileType(r, c, 'acute'),
+            acute: isTileType(r, c, 'acute') || isTileType(r, c, 'acuteLeft'),
             wall: isTileType(r, c, 'wall'),
             topWall: isTopWall(r, c),
+            flipped: isFlipped(r, c),
           }"
         />
       </div>
@@ -34,8 +35,18 @@ const foregroundList = ["floor", "goal", "grate", "cracked"];
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = ["wall", "glass", "cracked", "goal", "door"];
 
-// types of objects - stored separatelly so that can be placed on other tiles
-const objectTypes = ["player", "normal", "acute", "key", "brick", "bomb"];
+// types of objects - stored separately so that can be placed on other tiles
+const objectTypes = [
+  "player",
+  "playerLeft",
+  "normal",
+  "normalLeft",
+  "acute",
+  "acuteLeft",
+  "key",
+  "brick",
+  "bomb",
+];
 // types of tiles that can be placed on top of
 const pureTiles = ["floor", "grate"];
 
@@ -176,6 +187,10 @@ export default {
         this.objects[r][c] === "empty"
       );
     },
+    // returns true if a tile's image should be flipped
+    isFlipped(r, c) {
+      return this.objects[r][c].includes("Left");
+    },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
       // if it is an object, update object types (and switch background tile if needed)
@@ -221,13 +236,22 @@ export default {
     },
     // for objects or tiles that show up in front of the floor, get the image src
     getForegroundImage(r, c) {
-      if (this.isTileType(r, c, "player")) {
+      if (
+        this.isTileType(r, c, "player") ||
+        this.isTileType(r, c, "playerLeft")
+      ) {
         return playerImage;
       } else if (this.isTileType(r, c, "wall")) {
         return this.getWallImage(r, c);
-      } else if (this.isTileType(r, c, "normal")) {
+      } else if (
+        this.isTileType(r, c, "normal") ||
+        this.isTileType(r, c, "normalLeft")
+      ) {
         return mutantImage;
-      } else if (this.isTileType(r, c, "acute")) {
+      } else if (
+        this.isTileType(r, c, "acute") ||
+        this.isTileType(r, c, "acuteLeft")
+      ) {
         return mutantImage;
       } else if (this.isTileType(r, c, "bomb")) {
         return bombImage;
@@ -347,5 +371,9 @@ export default {
   position: absolute;
   left: 0;
   z-index: 2;
+}
+
+.flipped {
+  transform: scaleX(-1);
 }
 </style>

@@ -76,10 +76,20 @@ const stringify = require("json-stringify-pretty-compact");
 
 // UPDATE THE VERSION NUMBER WHEN THE JSON CHANGES
 // TODO - convert old versions to new versions somehow
-const versionNumber = "1.1";
+const versionNumber = "1.2";
 
-// types of objects - stored separatelly so that can be placed on other tiles
-const objectTypes = ["player", "normal", "acute", "key", "brick", "bomb"];
+// types of objects - stored separately so that can be placed on other tiles
+const objectTypes = [
+  "player",
+  "playerLeft",
+  "normal",
+  "normalLeft",
+  "acute",
+  "acuteLeft",
+  "key",
+  "brick",
+  "bomb",
+];
 
 export default {
   components: { LevelMap, ToolBar },
@@ -105,7 +115,9 @@ export default {
     // rules currently require there to be exactly one player and one goal tile
     areRulesMet() {
       if (this.tiles.length > 0) {
-        let players = this.findObjects("player");
+        let players = this.findObjects("player").concat(
+          this.findObjects("playerLeft")
+        );
         let goals = this.findObjects("goal");
         return players.length === 1 && goals.length === 1;
       }
@@ -181,11 +193,25 @@ export default {
       for (let i = 0; i < mutantSpawns.length; i++) {
         let position = mutantSpawns[i].position;
         let type = mutantSpawns[i].type.toLowerCase();
-        objects[this.height - position[1] - 1][position[0]] = type;
+        let direction = mutantSpawns[i].direction ?? "RIGHT";
+
+        if (direction === "LEFT") {
+          objects[this.height - position[1] - 1][position[0]] = type + "Left";
+        } else {
+          objects[this.height - position[1] - 1][position[0]] = type;
+        }
       }
 
+      // set player spawn and direction - default direction if not in JSON is right
       let playerSpawn = json.metadata["player-spawn"];
-      objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
+      let playerDirection = json.metadata["player-direction"] ?? "RIGHT";
+      console.log(playerDirection);
+      if (playerDirection === "LEFT") {
+        objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] =
+          "playerLeft";
+      } else {
+        objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
+      }
 
       // set input tiles and display the map
       this.inputTiles = tiles;
@@ -239,6 +265,15 @@ export default {
 
       let normalMutantSpawns = this.findObjects("normal");
       let acuteMutantSpawns = this.findObjects("acute");
+      let normalLeftSpawns = this.findObjects("normalLeft");
+      let acuteLeftSpawns = this.findObjects("acuteLeft");
+      let mutantSpawns = this.generateMutantSpawns(
+        normalMutantSpawns,
+        acuteMutantSpawns,
+        normalLeftSpawns,
+        acuteLeftSpawns
+      );
+
       let brickSpawns = this.findObjects("brick");
       let bombSpawns = this.findObjects("bomb");
       let keySpawns = this.findObjects("key");
@@ -247,16 +282,14 @@ export default {
         bombSpawns,
         keySpawns
       );
-      let mutantSpawns = this.generateMutantSpawns(
-        normalMutantSpawns,
-        acuteMutantSpawns
-      );
 
       // set metadata
       let metadata = {
         width: this.width,
         height: this.height,
-        "player-spawn": this.findObjects("player")[0],
+        "player-spawn": this.findObjects("player").concat(
+          this.findObjects("playerLeft")
+        )[0],
         "mutant-count": mutantSpawns.length,
         "mutant-spawns": mutantSpawns,
         "item-count": itemSpawns.length,
@@ -354,12 +387,13 @@ export default {
       return itemSpawns;
     },
     // generate the json representation of mutant spawns based on their type
-    // TODO - code is repetitive with generateItemSpawns, combine
-    generateMutantSpawns(normal, acute) {
+    // TODO use loops instead of repeating code 4 times
+    generateMutantSpawns(normal, acute, normalLeft, acuteLeft) {
       let mutantSpawns = [];
       normal.forEach((m) => {
         let mutant = {};
         mutant.type = "NORMAL";
+        mutant.direction = "RIGHT";
         mutant.position = m;
         mutantSpawns.push(mutant);
       });
@@ -367,6 +401,23 @@ export default {
       acute.forEach((m) => {
         let mutant = {};
         mutant.type = "ACUTE";
+        mutant.direction = "RIGHT";
+        mutant.position = m;
+        mutantSpawns.push(mutant);
+      });
+
+      normalLeft.forEach((m) => {
+        let mutant = {};
+        mutant.type = "NORMAL";
+        mutant.direction = "LEFT";
+        mutant.position = m;
+        mutantSpawns.push(mutant);
+      });
+
+      acuteLeft.forEach((m) => {
+        let mutant = {};
+        mutant.type = "ACUTE";
+        mutant.direction = "LEFT";
         mutant.position = m;
         mutantSpawns.push(mutant);
       });
