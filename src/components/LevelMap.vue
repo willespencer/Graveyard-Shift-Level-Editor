@@ -118,23 +118,30 @@ export default {
         }
 
         let newTiles = [];
+        let newObjects = [];
         for (let r = 0; r < val[1]; r++) {
           newTiles.push([]);
+          newObjects.push([]);
           for (let c = 0; c < val[0]; c++) {
             // place a wall if it is an edge of the map, the existing tile if it is in the old range, otherwise place the floor
             if (r === 0 || r === val[1] - 1) {
               newTiles[r].push("wall");
+              newObjects[r].push("empty");
             } else if (c === 0 || c === val[0] - 1) {
               newTiles[r].push("wall");
+              newObjects[r].push("empty");
             } else if (r < oldVal[1] && c < oldVal[0]) {
               newTiles[r].push(this.tileTypes[r][c]);
+              newObjects[r].push(this.objects[r][c]);
             } else {
               newTiles[r].push("floor");
+              newObjects[r].push("empty");
             }
           }
         }
 
         this.tileTypes = newTiles;
+        this.objects = newObjects;
         this.$emit("tile-changed", this.tileTypes, this.objects);
       },
     },
