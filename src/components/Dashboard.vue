@@ -1,5 +1,6 @@
 <template>
   <div class="dashboard">
+    <img class="logo" alt="Logo" src="@/assets/logo_new.png" />
     <h1 class="title">Level Editor</h1>
     <h4 class="version">File Version {{ version }}</h4>
     <div class="topWrapper">
@@ -16,8 +17,14 @@
       </div>
       <div class="optionWrapper">
         <h3>Existing Level</h3>
-        <input type="file" ref="myFiles" class="fileInput" />
-        <button class="button" @click="loadMap">Load Map</button>
+        <div class="fileWrapper">
+          <input type="file" id="file" ref="myFiles" class="fileInput" />
+          <label class="fileLabelButton" for="file">Choose File</label>
+          <span v-if="fileName" class="fileLabel">{{ fileName }}</span>
+        </div>
+        <button class="button" @click="loadMap" :disabled="!fileInputted">
+          Load Map
+        </button>
       </div>
     </div>
     <div class="toolsAndMapWrapper" v-if="displayMap">
@@ -110,7 +117,16 @@ export default {
       version: versionNumber,
       dimensions: [0, 0],
       levelLoading: false,
+      fileName: "No file chosen",
     };
+  },
+  // event to retrieve the file name after selected
+  mounted() {
+    var input = document.getElementsByClassName("fileInput")[0];
+    const _this = this;
+    input.addEventListener("change", function(e) {
+      _this.fileName = e.target.value.split("\\").pop();
+    });
   },
   computed: {
     // return true if the current rules of the map are met
@@ -124,6 +140,10 @@ export default {
         return players.length === 1 && goals.length === 1;
       }
       return false;
+    },
+    // returns true if a file has been provided but not yet loaded
+    fileInputted() {
+      return this.fileName !== "No file chosen";
     },
   },
   methods: {
@@ -156,6 +176,7 @@ export default {
       fr.onload = (e) => {
         const result = JSON.parse(e.target.result);
         this.convertJSONToMap(result);
+        this.fileName = "No file chosen";
       };
       fr.readAsText(files.item(0));
     },
@@ -506,10 +527,45 @@ export default {
   flex-direction: column;
   justify-content: left;
   text-align: left;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  color: #88a6cd;
 }
 
 .instructionsTitle {
   margin-bottom: 0;
   margin-top: 2rem;
+}
+
+.logo {
+  margin-top: 60px;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.fileWrapper {
+  border: 1px solid #51616e;
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 13.3333px;
+}
+
+.fileLabelButton {
+  background-color: #88a6cd;
+  border: 1px solid #88a6cd;
+  border-radius: 2px;
+  cursor: pointer;
+  color: black;
+  padding: 1px 8px;
+  margin-right: 0.5rem;
+}
+
+.fileLabelButton:hover:not([disabled]) {
+  background-color: #51616e;
+  border-color: #51616e;
 }
 </style>
