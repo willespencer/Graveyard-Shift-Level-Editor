@@ -36,6 +36,7 @@
         :inputTiles="inputTiles"
         :inputObjects="inputObjects"
         :levelLoading="levelLoading"
+        @level-loaded="setLevelLoaded"
         @tile-changed="updateTilesAndObjects"
       />
     </div>
@@ -243,9 +244,11 @@ export default {
       // set level loading to true so that the dimension watch handles setting tiles/objects properly
       this.levelLoading = true;
       this.dimensions = [this.width, this.height];
-      this.levelLoading = false;
-
       this.displayMap = true;
+    },
+    // set level loaded to false when done, fixes the loading two levels in a row issue
+    setLevelLoaded() {
+      this.levelLoading = false;
     },
     // converts the number representation of a tile in the game to the label in the editor
     convertNumberToTile(num) {

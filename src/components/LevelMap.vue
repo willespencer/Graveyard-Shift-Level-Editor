@@ -116,9 +116,10 @@ export default {
         if (!oldVal) {
           return;
           // if dimensions have been set before but level is being loaded in, set tiles/objects as input
-        } else if (!this.levelLoading) {
+        } else if (this.levelLoading) {
           this.tileTypes = this.inputTiles;
           this.objects = this.inputObjects;
+          this.$emit("level-loaded");
           return;
         }
 
