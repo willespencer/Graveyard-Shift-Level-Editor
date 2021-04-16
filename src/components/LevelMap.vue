@@ -19,6 +19,8 @@
             wall: isTileType(r, c, 'wall') || isTileType(r, c, 'light'),
             topWall: isTopWall(r, c),
             flipped: isFlipped(r, c),
+            openDoor: isTileType(r, c, 'open'),
+            openDoorSide: isTileType(r, c, 'open') && !shouldDisplaySide(r, c),
           }"
         />
       </div>
@@ -33,7 +35,16 @@
 const foregroundList = ["floor", "goal", "grate", "cracked"];
 
 // types of tiles that can act as walls for doors/glass to attach to
-const wallTypes = ["wall", "glass", "cracked", "goal", "door", "light"];
+const wallTypes = [
+  "wall",
+  "glass",
+  "cracked",
+  "goal",
+  "door",
+  "unlock",
+  "open",
+  "light",
+];
 
 // types of objects - stored separately so that can be placed on other tiles
 const objectTypes = [
@@ -66,10 +77,16 @@ import wallLight from "@/assets/wall_light.png";
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
 import barrelImage from "@/assets/barrel.png";
+
 import doorImage from "@/assets/door.png";
 import doorSideImage from "@/assets/door_side.png";
+import unlockImage from "@/assets/door_unlocked.png";
+import unlockSideImage from "@/assets/door_side_unlocked.png";
+import openImage from "@/assets/door_unlocked.png";
+import openSideImage from "@/assets/door_side_unlocked.png";
 import glassImage from "@/assets/glass.png";
 import glassSideImage from "@/assets/glass_side.png";
+
 import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
@@ -286,6 +303,18 @@ export default {
         } else {
           return doorImage;
         }
+      } else if (this.isTileType(r, c, "unlock")) {
+        if (this.shouldDisplaySide(r, c)) {
+          return unlockSideImage;
+        } else {
+          return unlockImage;
+        }
+      } else if (this.isTileType(r, c, "open")) {
+        if (this.shouldDisplaySide(r, c)) {
+          return openImage;
+        } else {
+          return openSideImage;
+        }
       } else if (this.isTileType(r, c, "glass")) {
         if (this.shouldDisplaySide(r, c)) {
           return glassSideImage;
@@ -396,5 +425,19 @@ export default {
 
 .flipped {
   transform: scaleX(-1);
+}
+
+.openDoor {
+  position: absolute;
+  left: 20px;
+  z-index: 2;
+  bottom: 39px;
+}
+
+.openDoorSide {
+  position: absolute;
+  left: -11px;
+  top: -10px;
+  z-index: 2;
 }
 </style>

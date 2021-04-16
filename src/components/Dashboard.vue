@@ -268,6 +268,10 @@ export default {
         return "grate";
       } else if (num === 8) {
         return "light";
+      } else if (num === 9) {
+        return "unlock";
+      } else if (num === 10) {
+        return "open";
       } else {
         return "floor";
       }
@@ -290,6 +294,10 @@ export default {
         return 7;
       } else if (tile === "light") {
         return 8;
+      } else if (tile === "unlock") {
+        return 9;
+      } else if (tile === "open") {
+        return 10;
       } else {
         return 0;
       }
@@ -467,6 +475,11 @@ export default {
 </script>
 
 <style scoped>
+.dashboard {
+  min-width: fit-content;
+  background-color: #181818;
+}
+
 .title {
   margin-bottom: 0;
 }

@@ -68,6 +68,36 @@
         <div class="item">
           <button
             class="button"
+            @click="changePlacing('door')"
+            :disabled="isSelected('door')"
+          >
+            <img class="buttonImage" src="@/assets/door.png" />
+          </button>
+          <span class="buttonText">Door</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('unlock')"
+            :disabled="isSelected('unlock')"
+          >
+            <img class="buttonImage" src="@/assets/door_unlocked.png" />
+          </button>
+          <span class="buttonText">Unlock</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('open')"
+            :disabled="isSelected('open')"
+          >
+            <img class="buttonImage" src="@/assets/door_side_unlocked.png" />
+          </button>
+          <span class="buttonText">Open</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
             @click="changePlacing('glass')"
             :disabled="isSelected('glass')"
           >
@@ -84,16 +114,6 @@
             <img class="buttonImage" src="@/assets/barrel.png" />
           </button>
           <span class="buttonText">Barrel</span>
-        </div>
-        <div class="item">
-          <button
-            class="button"
-            @click="changePlacing('door')"
-            :disabled="isSelected('door')"
-          >
-            <img class="buttonImage" src="@/assets/door.png" />
-          </button>
-          <span class="buttonText">Door</span>
         </div>
       </div>
     </div>
