@@ -115,6 +115,16 @@
           </button>
           <span class="buttonText">Barrel</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('speaker')"
+            :disabled="isSelected('speaker')"
+          >
+            <img class="buttonImage" src="@/assets/speaker.png" />
+          </button>
+          <span class="buttonText">Speaker</span>
+        </div>
       </div>
     </div>
     <div>

@@ -77,6 +77,7 @@ import wallLight from "@/assets/wall_light.png";
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
 import barrelImage from "@/assets/barrel.png";
+import speakerImage from "@/assets/speaker.png";
 
 import doorImage from "@/assets/door.png";
 import doorSideImage from "@/assets/door_side.png";
@@ -297,6 +298,8 @@ export default {
         return brickImage;
       } else if (this.isTileType(r, c, "barrel")) {
         return barrelImage;
+      } else if (this.isTileType(r, c, "speaker")) {
+        return speakerImage;
       } else if (this.isTileType(r, c, "door")) {
         if (this.shouldDisplaySide(r, c)) {
           return doorSideImage;

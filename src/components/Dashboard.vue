@@ -272,6 +272,8 @@ export default {
         return "unlock";
       } else if (num === 10) {
         return "open";
+      } else if (num === 11) {
+        return "speaker";
       } else {
         return "floor";
       }
@@ -298,6 +300,8 @@ export default {
         return 9;
       } else if (tile === "open") {
         return 10;
+      } else if (tile === "speaker") {
+        return 11;
       } else {
         return 0;
       }
