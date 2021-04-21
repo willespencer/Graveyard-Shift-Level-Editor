@@ -23,6 +23,11 @@
             openDoorSide: isTileType(r, c, 'open') && !shouldDisplaySide(r, c),
           }"
         />
+        <img
+          v-if="getArrowImage(r, c)"
+          class="arrow"
+          :src="getArrowImage(r, c)"
+        />
       </div>
     </div>
   </div>
@@ -95,6 +100,11 @@ import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
 
+import rightArrow from "@/assets/right_arrow.png";
+import upArrow from "@/assets/up_arrow.png";
+import leftArrow from "@/assets/left_arrow.png";
+import downArrow from "@/assets/down_arrow.png";
+
 export default {
   props: {
     dimensions: Array,
@@ -115,6 +125,8 @@ export default {
       tileTypes: tiles,
       isMouseDown: false,
       objects,
+      mutantLists: [], // TODO load in
+      currentMutantList: [],
     };
   },
   created() {
@@ -228,8 +240,19 @@ export default {
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
+      // if the tile being placed is a path and a mutant is clicked on, add it to current path list
+      if (this.typeToPlace === "path") {
+        if (
+          this.isTileType(r, c, "normal") ||
+          this.isTileType(r, c, "normalLeft") ||
+          this.isTileType(r, c, "acute") ||
+          this.isTileType(r, c, "acuteLeft")
+        ) {
+          this.currentMutantList.push([r, c]);
+        }
+      }
       // if it is an object, update object types (and switch background tile if needed)
-      if (objectTypes.includes(this.typeToPlace)) {
+      else if (objectTypes.includes(this.typeToPlace)) {
         const newObjectRow = this.objects[r].slice(0);
         newObjectRow[c] = this.typeToPlace;
         this.$set(this.objects, r, newObjectRow);
@@ -250,6 +273,15 @@ export default {
         newObjectRow[c] = "empty";
         this.$set(this.objects, r, newObjectRow);
       }
+
+      // if not adding paths, but mutant list exists, add it to the list of all mutant paths and reset it
+      if (this.typeToPlace !== "path" && this.currentMutantList.length > 0) {
+        // TODO this appends it, but there will be no way to add to it later
+        this.mutantLists.push(this.currentMutantList);
+        console.log(this.currentMutantList);
+        this.currentMutantList = [];
+      }
+
       this.$emit("tile-changed", this.tileTypes, this.objects);
     },
     // gets the src of applicable tiles. If there is an object on this space, return whichever tile is below it
@@ -374,6 +406,42 @@ export default {
           this.isTileType(r + 1, c, "light"))
       );
     },
+    // returns true if r, c should display an arrow
+    getArrowImage(r, c) {
+      // TODO relies on only 2 mutants in 1 list, will rely on more than that
+      // TODO also need to do current mutant list probably
+
+      // loop through each path in mutantLists in addition to the current list
+      for (let i = 0; i < this.mutantLists.length + 1; i++) {
+        let list = this.currentMutantList;
+        if (i !== this.mutantLists.length) {
+          list = this.mutantLists[i];
+        }
+
+        // loop through the adjacent patrol points
+        for (let j = 1; j < list.length; j++) {
+          let start = list[j - 1];
+          let end = list[j];
+
+          if (r > start[0] && r < end[0] && c === end[1]) {
+            return downArrow;
+          } else if (r < start[0] && r > end[0] && c === end[1]) {
+            return upArrow;
+          } else if (c > start[1] && c < end[1] && r === start[0]) {
+            return rightArrow;
+          } else if (c < start[1] && c > end[1] && r === start[0]) {
+            return leftArrow;
+          } else if (r === start[0] && c === end[1]) {
+            if (start[1] < end[1]) {
+              return rightArrow;
+            }
+            return leftArrow;
+          }
+        }
+      }
+
+      return "";
+    },
   },
 };
 </script>
@@ -449,5 +517,14 @@ export default {
   left: -11px;
   top: -10px;
   z-index: 2;
+}
+
+.arrow {
+  max-width: 30px;
+  max-height: 30px;
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  opacity: 50%;
 }
 </style>

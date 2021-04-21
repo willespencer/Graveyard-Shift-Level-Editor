@@ -210,6 +210,16 @@
           </button>
           <span class="buttonText">Acute (Left)</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('path')"
+            :disabled="isSelected('path')"
+          >
+            <img class="buttonImage flipped" src="@/assets/mutant.png" />
+          </button>
+          <span class="buttonText">Path</span>
+        </div>
       </div>
       <div class="section">Items</div>
       <div class="buttons">
