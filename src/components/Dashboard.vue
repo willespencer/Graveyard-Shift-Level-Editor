@@ -264,6 +264,12 @@ export default {
         return "door";
       } else if (num === 6) {
         return "barrel";
+      } else if (num === 12) {
+        return "barrel4";
+      } else if (num === 13) {
+        return "crate";
+      } else if (num === 14) {
+        return "crate2";
       } else if (num === 7) {
         return "grate";
       } else if (num === 8) {
@@ -290,6 +296,12 @@ export default {
         return 5;
       } else if (tile === "barrel") {
         return 6;
+      } else if (tile === "barrel4") {
+        return 12;
+      } else if (tile === "crate") {
+        return 13;
+      } else if (tile === "crate2") {
+        return 14;
       } else if (tile === "grate") {
         return 7;
       } else if (tile === "light") {

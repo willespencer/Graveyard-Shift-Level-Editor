@@ -76,7 +76,11 @@ import wallLight from "@/assets/wall_light.png";
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
-import barrelImage from "@/assets/barrel.png";
+
+import barrelImage from "@/assets/barrel3.png";
+import barrel4Image from "@/assets/barrel4.png";
+import crateImage from "@/assets/crate.png";
+import crate2Image from "@/assets/crate2.png";
 
 import doorImage from "@/assets/door.png";
 import doorSideImage from "@/assets/door_side.png";
@@ -297,6 +301,12 @@ export default {
         return brickImage;
       } else if (this.isTileType(r, c, "barrel")) {
         return barrelImage;
+      } else if (this.isTileType(r, c, "barrel4")) {
+        return barrel4Image;
+      } else if (this.isTileType(r, c, "crate")) {
+        return crateImage;
+      } else if (this.isTileType(r, c, "crate2")) {
+        return crate2Image;
       } else if (this.isTileType(r, c, "door")) {
         if (this.shouldDisplaySide(r, c)) {
           return doorSideImage;
