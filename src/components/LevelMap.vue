@@ -181,7 +181,13 @@ export default {
 
         this.tileTypes = newTiles;
         this.objects = newObjects;
-        this.$emit("tile-changed", this.tileTypes, this.objects);
+        this.$emit(
+          "tile-changed",
+          this.tileTypes,
+          this.objects,
+          this.mutantLists,
+          this.currentMutantList
+        );
       },
     },
   },
@@ -215,7 +221,13 @@ export default {
           this.objects[r].push("empty");
         }
       }
-      this.$emit("tile-changed", this.tileTypes, this.objects);
+      this.$emit(
+        "tile-changed",
+        this.tileTypes,
+        this.objects,
+        this.mutantLists,
+        this.currentMutantList
+      );
     },
     // checks if the tile at r, c is of type type, or if there is an object at r, c, if the object matches type
     isTileType(r, c, type) {
@@ -278,11 +290,15 @@ export default {
       if (this.typeToPlace !== "path" && this.currentMutantList.length > 0) {
         // TODO this appends it, but there will be no way to add to it later
         this.mutantLists.push(this.currentMutantList);
-        console.log(this.currentMutantList);
         this.currentMutantList = [];
       }
-
-      this.$emit("tile-changed", this.tileTypes, this.objects);
+      this.$emit(
+        "tile-changed",
+        this.tileTypes,
+        this.objects,
+        this.mutantLists,
+        this.currentMutantList
+      );
     },
     // gets the src of applicable tiles. If there is an object on this space, return whichever tile is below it
     getBackgroundImage(r, c) {

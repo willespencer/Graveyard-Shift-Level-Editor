@@ -113,6 +113,7 @@ export default {
       typePlacing: "floor",
       tiles: [],
       objects: [],
+      mutantPaths: [],
       inputTiles: [],
       inputObjects: [],
       version: versionNumber,
@@ -156,9 +157,16 @@ export default {
       this.displayMap = true;
     },
     // when the tiles are updated in LevelMap, update them in Dashboard for JSON purposes
-    updateTilesAndObjects(tiles, objects) {
+    updateTilesAndObjects(tiles, objects, mutantPaths, currentPath) {
       this.tiles = tiles;
       this.objects = objects;
+      // do not add current path if it does not contain at least 2 mutants
+      if (currentPath.length < 2) {
+        this.mutantPaths = mutantPaths;
+      } else {
+        mutantPaths.push(currentPath);
+        this.mutantPaths = mutantPaths;
+      }
     },
     // update the tile being placed when a button is clicked on in ToolBar
     updateTilePlacing(type) {
@@ -327,7 +335,8 @@ export default {
         normalMutantSpawns,
         acuteMutantSpawns,
         normalLeftSpawns,
-        acuteLeftSpawns
+        acuteLeftSpawns,
+        this.transformPaths(this.mutantPaths)
       );
 
       let brickSpawns = this.findObjects("brick");
@@ -444,43 +453,75 @@ export default {
 
       return itemSpawns;
     },
-    // generate the json representation of mutant spawns based on their type
-    // TODO use loops instead of repeating code 4 times
-    generateMutantSpawns(normal, acute, normalLeft, acuteLeft) {
+    // generate the json representation of mutant spawns based on their type. including mutant paths
+    generateMutantSpawns(normal, acute, normalLeft, acuteLeft, paths) {
       let mutantSpawns = [];
-      normal.forEach((m) => {
-        let mutant = {};
-        mutant.type = "NORMAL";
-        mutant.direction = "RIGHT";
-        mutant.position = m;
-        mutantSpawns.push(mutant);
-      });
 
-      acute.forEach((m) => {
-        let mutant = {};
-        mutant.type = "ACUTE";
-        mutant.direction = "RIGHT";
-        mutant.position = m;
-        mutantSpawns.push(mutant);
-      });
-
-      normalLeft.forEach((m) => {
-        let mutant = {};
-        mutant.type = "NORMAL";
-        mutant.direction = "LEFT";
-        mutant.position = m;
-        mutantSpawns.push(mutant);
-      });
-
-      acuteLeft.forEach((m) => {
-        let mutant = {};
-        mutant.type = "ACUTE";
-        mutant.direction = "LEFT";
-        mutant.position = m;
-        mutantSpawns.push(mutant);
-      });
+      mutantSpawns = mutantSpawns.concat(
+        this.generateMutantSpawnsForType(normal, paths, "NORMAL", "RIGHT")
+      );
+      mutantSpawns = mutantSpawns.concat(
+        this.generateMutantSpawnsForType(acute, paths, "ACUTE", "RIGHT")
+      );
+      mutantSpawns = mutantSpawns.concat(
+        this.generateMutantSpawnsForType(normalLeft, paths, "NORMAL", "LEFT")
+      );
+      mutantSpawns = mutantSpawns.concat(
+        this.generateMutantSpawnsForType(acuteLeft, paths, "ACUTE", "LEFT")
+      );
 
       return mutantSpawns;
+    },
+    // generate mutant spawns from mutant list and path list of given type (normal or acute) and direction (left or right)
+    generateMutantSpawnsForType(mutants, paths, type, direction) {
+      let spawns = [];
+
+      mutants.forEach((m) => {
+        let mutant = {};
+        mutant.type = type;
+        mutant.direction = direction;
+        mutant.position = m;
+
+        // if mutant position matches a starting point, add path information
+        // if mutant positions matches a later point, do not include it
+        let includeMutant = true;
+        paths.forEach((path) => {
+          let startingPoint = path[0];
+          if (m[0] === startingPoint[0] && m[1] === startingPoint[1]) {
+            mutant["patrol-point-count"] = path.length;
+            mutant["patrol-path"] = path;
+          } else if (this.isArrayInArray(path, m)) {
+            includeMutant = false;
+          }
+        });
+
+        if (includeMutant) {
+          spawns.push(mutant);
+        }
+      });
+
+      return spawns;
+    },
+    // change path indices to match json indices
+    transformPaths(paths) {
+      let newPaths = [];
+      paths.forEach((path) => {
+        let newPath = [];
+        path.forEach((point) => {
+          newPath.push([point[1], this.height - point[0] - 1]);
+        });
+        newPaths.push(newPath);
+      });
+      return newPaths;
+    },
+    // returns true if item array is in 2d array arr, otherwise false
+    isArrayInArray(arr, item) {
+      var itemAsString = JSON.stringify(item);
+
+      var contains = arr.some(function(ele) {
+        return JSON.stringify(ele) === itemAsString;
+      });
+      return contains;
     },
   },
 };

@@ -218,7 +218,7 @@
           >
             <img class="buttonImage flipped" src="@/assets/mutant.png" />
           </button>
-          <span class="buttonText">Path</span>
+          <span class="buttonText">Mutant Path</span>
         </div>
       </div>
       <div class="section">Items</div>
