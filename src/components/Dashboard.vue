@@ -54,6 +54,25 @@
         <span
           >If these rules are not followed, level cannot be downloaded!</span
         >
+        <h3 class="instructionsTitle">Mutant Patrol Path Instructions</h3>
+        <ol class="instructionsList">
+          <li>
+            Mutants can have patrol paths by clicking the path button in the
+            toolbar and clicking on mutants in the patrolling order.
+          </li>
+          <li>
+            Clicking a different button in the toolbar will "complete" the
+            current path. This path cannot be added to later.
+          </li>
+          <li>
+            To remove a path, replace one of the mutant icons in the patrol path
+            with a different tile.
+          </li>
+          <li>
+            Note: arrows drawn on the map might not reflect the direction the
+            mutant actually travels in the game.
+          </li>
+        </ol>
         <h3 class="instructionsTitle">
           Instructions For Downloading and Playing the Level
         </h3>
