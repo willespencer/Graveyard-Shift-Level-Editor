@@ -66,6 +66,9 @@ const objectTypes = [
 // types of tiles that can be placed on top of
 const pureTiles = ["floor", "grate"];
 
+// types of mutants
+const mutantTypes = ["normal", "normalLeft", "acute", "acuteLeft"];
+
 // images that show up in as a background image / tile
 import floorImage from "@/assets/floor.png";
 import wallImage from "@/assets/walltop.png";
@@ -273,7 +276,29 @@ export default {
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
-      // if the tile being placed is a path and a mutant is clicked on, add it to current path list
+      // if placing a non-mutant/path on top of a mutant, remove path mutant is in, if any
+      if (
+        !mutantTypes.includes(this.typeToPlace) &&
+        this.typeToPlace !== "path" &&
+        (this.isTileType(r, c, "normal") ||
+          this.isTileType(r, c, "normalLeft") ||
+          this.isTileType(r, c, "acute") ||
+          this.isTileType(r, c, "acuteLeft"))
+      ) {
+        for (let i = this.mutantLists.length - 1; i >= 0; i--) {
+          let path = this.mutantLists[i];
+          if (this.isArrayInArray(path, [r, c])) {
+            this.mutantLists.splice(i, 1);
+          }
+        }
+
+        // also reset currentMutantList if mutant removed present in that path
+        if (this.isArrayInArray(this.currentMutantList, [r, c])) {
+          this.currentMutantList = [];
+        }
+      }
+
+      // if the tile being placed is a path and a mutant is clicked on, add it to current path list, as long as mutant is not in a path (outside of current path)
       if (this.typeToPlace === "path") {
         if (
           this.isTileType(r, c, "normal") ||
@@ -281,7 +306,15 @@ export default {
           this.isTileType(r, c, "acute") ||
           this.isTileType(r, c, "acuteLeft")
         ) {
-          this.currentMutantList.push([r, c]);
+          let inPathBesidesCurrent = false;
+          this.mutantLists.forEach((path) => {
+            if (this.isArrayInArray(path, [r, c])) {
+              inPathBesidesCurrent = true;
+            }
+          });
+          if (!inPathBesidesCurrent) {
+            this.currentMutantList.push([r, c]);
+          }
         }
       }
       // if it is an object, update object types (and switch background tile if needed)
@@ -478,6 +511,15 @@ export default {
       }
 
       return "";
+    },
+    // returns true if item array is in 2d array arr, otherwise false
+    isArrayInArray(arr, item) {
+      var itemAsString = JSON.stringify(item);
+
+      var contains = arr.some(function(ele) {
+        return JSON.stringify(ele) === itemAsString;
+      });
+      return contains;
     },
   },
 };
