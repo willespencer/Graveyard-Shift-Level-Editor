@@ -23,6 +23,11 @@
             openDoorSide: isTileType(r, c, 'open') && !shouldDisplaySide(r, c),
           }"
         />
+        <img
+          v-if="getArrowImage(r, c)"
+          class="arrow"
+          :src="getArrowImage(r, c)"
+        />
       </div>
     </div>
   </div>
@@ -61,6 +66,9 @@ const objectTypes = [
 // types of tiles that can be placed on top of
 const pureTiles = ["floor", "grate"];
 
+// types of mutants
+const mutantTypes = ["normal", "normalLeft", "acute", "acuteLeft"];
+
 // images that show up in as a background image / tile
 import floorImage from "@/assets/floor.png";
 import wallImage from "@/assets/walltop.png";
@@ -76,8 +84,12 @@ import wallLight from "@/assets/wall_light.png";
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
-import barrelImage from "@/assets/barrel.png";
 import speakerImage from "@/assets/speaker.png";
+
+import barrelImage from "@/assets/barrel3.png";
+import barrel4Image from "@/assets/barrel4.png";
+import crateImage from "@/assets/crate.png";
+import crate2Image from "@/assets/crate2.png";
 
 import doorImage from "@/assets/door.png";
 import doorSideImage from "@/assets/door_side.png";
@@ -92,26 +104,36 @@ import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
 
+import rightArrow from "@/assets/right_arrow.png";
+import upArrow from "@/assets/up_arrow.png";
+import leftArrow from "@/assets/left_arrow.png";
+import downArrow from "@/assets/down_arrow.png";
+
 export default {
   props: {
     dimensions: Array,
     typeToPlace: String,
     inputTiles: Array,
     inputObjects: Array,
+    inputPaths: Array,
     levelLoading: Boolean,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
     let objects = [];
-    if (this.inputTiles.length > 0 && this.inputObjects.length > 0) {
+    let mutantLists = [];
+    if (this.inputTiles.length > 0) {
       tiles = this.inputTiles;
       objects = this.inputObjects;
+      mutantLists = this.inputPaths;
     }
     return {
       tileTypes: tiles,
       isMouseDown: false,
       objects,
+      mutantLists: mutantLists,
+      currentMutantList: [],
     };
   },
   created() {
@@ -137,6 +159,7 @@ export default {
         } else if (this.levelLoading) {
           this.tileTypes = this.inputTiles;
           this.objects = this.inputObjects;
+          this.mutantLists = this.inputPaths;
           this.$emit("level-loaded");
           return;
         }
@@ -164,9 +187,32 @@ export default {
           }
         }
 
+        // if all parts of path are still in bounds, keep path
+        let newPaths = [];
+        this.mutantLists.push(this.currentMutantList);
+        this.mutantLists.forEach((path) => {
+          let pathInBounds = true;
+          path.forEach((point) => {
+            if (!(point[0] < val[1] - 1 && point[1] < val[0] - 1)) {
+              pathInBounds = false;
+            }
+          });
+          if (pathInBounds) {
+            newPaths.push(path);
+          }
+        });
+
         this.tileTypes = newTiles;
         this.objects = newObjects;
-        this.$emit("tile-changed", this.tileTypes, this.objects);
+        this.mutantLists = newPaths;
+        this.currentMutantList = [];
+        this.$emit(
+          "tile-changed",
+          this.tileTypes,
+          this.objects,
+          this.mutantLists,
+          this.currentMutantList
+        );
       },
     },
   },
@@ -200,7 +246,13 @@ export default {
           this.objects[r].push("empty");
         }
       }
-      this.$emit("tile-changed", this.tileTypes, this.objects);
+      this.$emit(
+        "tile-changed",
+        this.tileTypes,
+        this.objects,
+        this.mutantLists,
+        this.currentMutantList
+      );
     },
     // checks if the tile at r, c is of type type, or if there is an object at r, c, if the object matches type
     isTileType(r, c, type) {
@@ -225,8 +277,49 @@ export default {
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
+      // if placing a non-mutant/path on top of a mutant, remove path mutant is in, if any
+      if (
+        !mutantTypes.includes(this.typeToPlace) &&
+        this.typeToPlace !== "path" &&
+        (this.isTileType(r, c, "normal") ||
+          this.isTileType(r, c, "normalLeft") ||
+          this.isTileType(r, c, "acute") ||
+          this.isTileType(r, c, "acuteLeft"))
+      ) {
+        for (let i = this.mutantLists.length - 1; i >= 0; i--) {
+          let path = this.mutantLists[i];
+          if (this.isArrayInArray(path, [r, c])) {
+            this.mutantLists.splice(i, 1);
+          }
+        }
+
+        // also reset currentMutantList if mutant removed present in that path
+        if (this.isArrayInArray(this.currentMutantList, [r, c])) {
+          this.currentMutantList = [];
+        }
+      }
+
+      // if the tile being placed is a path and a mutant is clicked on, add it to current path list, as long as mutant is not in a path (outside of current path)
+      if (this.typeToPlace === "path") {
+        if (
+          this.isTileType(r, c, "normal") ||
+          this.isTileType(r, c, "normalLeft") ||
+          this.isTileType(r, c, "acute") ||
+          this.isTileType(r, c, "acuteLeft")
+        ) {
+          let inPathBesidesCurrent = false;
+          this.mutantLists.forEach((path) => {
+            if (this.isArrayInArray(path, [r, c])) {
+              inPathBesidesCurrent = true;
+            }
+          });
+          if (!inPathBesidesCurrent) {
+            this.currentMutantList.push([r, c]);
+          }
+        }
+      }
       // if it is an object, update object types (and switch background tile if needed)
-      if (objectTypes.includes(this.typeToPlace)) {
+      else if (objectTypes.includes(this.typeToPlace)) {
         const newObjectRow = this.objects[r].slice(0);
         newObjectRow[c] = this.typeToPlace;
         this.$set(this.objects, r, newObjectRow);
@@ -247,7 +340,20 @@ export default {
         newObjectRow[c] = "empty";
         this.$set(this.objects, r, newObjectRow);
       }
-      this.$emit("tile-changed", this.tileTypes, this.objects);
+
+      // if not adding paths, but mutant list exists, add it to the list of all mutant paths and reset it
+      if (this.typeToPlace !== "path" && this.currentMutantList.length > 0) {
+        // TODO this appends it, but there will be no way to add to it later
+        this.mutantLists.push(this.currentMutantList);
+        this.currentMutantList = [];
+      }
+      this.$emit(
+        "tile-changed",
+        this.tileTypes,
+        this.objects,
+        this.mutantLists,
+        this.currentMutantList
+      );
     },
     // gets the src of applicable tiles. If there is an object on this space, return whichever tile is below it
     getBackgroundImage(r, c) {
@@ -300,6 +406,12 @@ export default {
         return barrelImage;
       } else if (this.isTileType(r, c, "speaker")) {
         return speakerImage;
+      } else if (this.isTileType(r, c, "barrel4")) {
+        return barrel4Image;
+      } else if (this.isTileType(r, c, "crate")) {
+        return crateImage;
+      } else if (this.isTileType(r, c, "crate2")) {
+        return crate2Image;
       } else if (this.isTileType(r, c, "door")) {
         if (this.shouldDisplaySide(r, c)) {
           return doorSideImage;
@@ -366,6 +478,51 @@ export default {
         (this.isTileType(r + 1, c, "wall") ||
           this.isTileType(r + 1, c, "light"))
       );
+    },
+    // returns true if r, c should display an arrow
+    getArrowImage(r, c) {
+      // TODO relies on only 2 mutants in 1 list, will rely on more than that
+      // TODO also need to do current mutant list probably
+
+      // loop through each path in mutantLists in addition to the current list
+      for (let i = 0; i < this.mutantLists.length + 1; i++) {
+        let list = this.currentMutantList;
+        if (i !== this.mutantLists.length) {
+          list = this.mutantLists[i];
+        }
+
+        // loop through the adjacent patrol points
+        for (let j = 1; j < list.length; j++) {
+          let start = list[j - 1];
+          let end = list[j];
+
+          if (r > start[0] && r < end[0] && c === end[1]) {
+            return downArrow;
+          } else if (r < start[0] && r > end[0] && c === end[1]) {
+            return upArrow;
+          } else if (c > start[1] && c < end[1] && r === start[0]) {
+            return rightArrow;
+          } else if (c < start[1] && c > end[1] && r === start[0]) {
+            return leftArrow;
+          } else if (r === start[0] && c === end[1]) {
+            if (start[1] < end[1]) {
+              return rightArrow;
+            }
+            return leftArrow;
+          }
+        }
+      }
+
+      return "";
+    },
+    // returns true if item array is in 2d array arr, otherwise false
+    isArrayInArray(arr, item) {
+      var itemAsString = JSON.stringify(item);
+
+      var contains = arr.some(function(ele) {
+        return JSON.stringify(ele) === itemAsString;
+      });
+      return contains;
     },
   },
 };
@@ -442,5 +599,14 @@ export default {
   left: -11px;
   top: -10px;
   z-index: 2;
+}
+
+.arrow {
+  max-width: 30px;
+  max-height: 30px;
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  opacity: 50%;
 }
 </style>

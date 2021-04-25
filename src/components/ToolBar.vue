@@ -111,9 +111,39 @@
             @click="changePlacing('barrel')"
             :disabled="isSelected('barrel')"
           >
-            <img class="buttonImage" src="@/assets/barrel.png" />
+            <img class="buttonImage" src="@/assets/barrel3.png" />
           </button>
-          <span class="buttonText">Barrel</span>
+          <span class="buttonText">Barrel 3</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('barrel4')"
+            :disabled="isSelected('barrel4')"
+          >
+            <img class="buttonImage" src="@/assets/barrel4.png" />
+          </button>
+          <span class="buttonText">Barrel 4</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('crate')"
+            :disabled="isSelected('crate')"
+          >
+            <img class="buttonImage" src="@/assets/crate.png" />
+          </button>
+          <span class="buttonText">Crate 1</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('crate2')"
+            :disabled="isSelected('crate2')"
+          >
+            <img class="buttonImage" src="@/assets/crate2.png" />
+          </button>
+          <span class="buttonText">Crate 2</span>
         </div>
         <div class="item">
           <button
@@ -189,6 +219,16 @@
             <img class="buttonImage acute flipped" src="@/assets/mutant.png" />
           </button>
           <span class="buttonText">Acute (Left)</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('path')"
+            :disabled="isSelected('path')"
+          >
+            <img class="buttonImage flipped" src="@/assets/left_arrow.png" />
+          </button>
+          <span class="buttonText">Mutant Path</span>
         </div>
       </div>
       <div class="section">Items</div>
