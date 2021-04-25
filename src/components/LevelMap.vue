@@ -111,21 +111,24 @@ export default {
     typeToPlace: String,
     inputTiles: Array,
     inputObjects: Array,
+    inputPaths: Array,
     levelLoading: Boolean,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
     let tiles = [];
     let objects = [];
-    if (this.inputTiles.length > 0 && this.inputObjects.length > 0) {
+    let mutantLists = [];
+    if (this.inputTiles.length > 0) {
       tiles = this.inputTiles;
       objects = this.inputObjects;
+      mutantLists = this.inputPaths;
     }
     return {
       tileTypes: tiles,
       isMouseDown: false,
       objects,
-      mutantLists: [], // TODO load in
+      mutantLists: mutantLists,
       currentMutantList: [],
     };
   },
@@ -152,6 +155,7 @@ export default {
         } else if (this.levelLoading) {
           this.tileTypes = this.inputTiles;
           this.objects = this.inputObjects;
+          this.mutantLists = this.inputPaths;
           this.$emit("level-loaded");
           return;
         }
@@ -179,8 +183,25 @@ export default {
           }
         }
 
+        // if all parts of path are still in bounds, keep path
+        let newPaths = [];
+        this.mutantLists.push(this.currentMutantList);
+        this.mutantLists.forEach((path) => {
+          let pathInBounds = true;
+          path.forEach((point) => {
+            if (!(point[0] < val[1] - 1 && point[1] < val[0] - 1)) {
+              pathInBounds = false;
+            }
+          });
+          if (pathInBounds) {
+            newPaths.push(path);
+          }
+        });
+
         this.tileTypes = newTiles;
         this.objects = newObjects;
+        this.mutantLists = newPaths;
+        this.currentMutantList = [];
         this.$emit(
           "tile-changed",
           this.tileTypes,

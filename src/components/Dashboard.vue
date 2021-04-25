@@ -35,6 +35,7 @@
         :typeToPlace="typePlacing"
         :inputTiles="inputTiles"
         :inputObjects="inputObjects"
+        :inputPaths="inputPaths"
         :levelLoading="levelLoading"
         @level-loaded="setLevelLoaded"
         @tile-changed="updateTilesAndObjects"
@@ -116,6 +117,7 @@ export default {
       mutantPaths: [],
       inputTiles: [],
       inputObjects: [],
+      inputPaths: [],
       version: versionNumber,
       dimensions: [0, 0],
       levelLoading: false,
@@ -219,8 +221,9 @@ export default {
         objects[this.height - position[1] - 1][position[0]] = type;
       }
 
-      // copy player mutants in
+      // copy mutant and paths in
       let mutantSpawns = json.metadata["mutant-spawns"];
+      let mutantPaths = [];
       for (let i = 0; i < mutantSpawns.length; i++) {
         let position = mutantSpawns[i].position;
         let type = mutantSpawns[i].type.toLowerCase();
@@ -230,6 +233,21 @@ export default {
           objects[this.height - position[1] - 1][position[0]] = type + "Left";
         } else {
           objects[this.height - position[1] - 1][position[0]] = type;
+        }
+
+        // add patrol path to map, and add mutants along each point after the starting point
+        if (mutantSpawns[i]["patrol-path"]) {
+          let path = this.transformPathFromJSON(mutantSpawns[i]["patrol-path"]);
+          mutantPaths.push(path);
+          path.forEach((point, i) => {
+            if (i !== 0) {
+              if (direction === "LEFT") {
+                objects[point[0]][point[1]] = type + "Left";
+              } else {
+                objects[point[0]][point[1]] = type;
+              }
+            }
+          });
         }
       }
 
@@ -246,8 +264,10 @@ export default {
       // set input tiles and display the map
       this.inputTiles = tiles;
       this.inputObjects = objects;
+      this.inputPaths = mutantPaths;
       this.tiles = this.inputTiles;
       this.objects = this.inputObjects;
+      this.mutantPaths = this.inputPaths;
 
       // set level loading to true so that the dimension watch handles setting tiles/objects properly
       this.levelLoading = true;
@@ -336,7 +356,7 @@ export default {
         acuteMutantSpawns,
         normalLeftSpawns,
         acuteLeftSpawns,
-        this.transformPaths(this.mutantPaths)
+        this.transformPathsToJSON(this.mutantPaths)
       );
 
       let brickSpawns = this.findObjects("brick");
@@ -502,8 +522,8 @@ export default {
 
       return spawns;
     },
-    // change path indices to match json indices
-    transformPaths(paths) {
+    // change all path indices to match json indices
+    transformPathsToJSON(paths) {
       let newPaths = [];
       paths.forEach((path) => {
         let newPath = [];
@@ -513,6 +533,14 @@ export default {
         newPaths.push(newPath);
       });
       return newPaths;
+    },
+    // change a singular path's indices from json to map indices
+    transformPathFromJSON(path) {
+      let newPath = [];
+      path.forEach((point) => {
+        newPath.push([this.height - point[1] - 1, point[0]]);
+      });
+      return newPath;
     },
     // returns true if item array is in 2d array arr, otherwise false
     isArrayInArray(arr, item) {

@@ -216,7 +216,7 @@
             @click="changePlacing('path')"
             :disabled="isSelected('path')"
           >
-            <img class="buttonImage flipped" src="@/assets/mutant.png" />
+            <img class="buttonImage flipped" src="@/assets/left_arrow.png" />
           </button>
           <span class="buttonText">Mutant Path</span>
         </div>
