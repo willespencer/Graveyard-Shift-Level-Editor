@@ -155,6 +155,46 @@
           </button>
           <span class="buttonText">Speaker</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('computer')"
+            :disabled="isSelected('computer')"
+          >
+            <img class="buttonImage" src="@/assets/computer.png" />
+          </button>
+          <span class="buttonText">PC</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('computerLeft')"
+            :disabled="isSelected('computerLeft')"
+          >
+            <img class="buttonImage" src="@/assets/computer_side.png" />
+          </button>
+          <span class="buttonText">PC (Left)</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('computerRight')"
+            :disabled="isSelected('computerRight')"
+          >
+            <img class="buttonImage" src="@/assets/computer_side_right.png" />
+          </button>
+          <span class="buttonText">PC (Right)</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('puddle')"
+            :disabled="isSelected('puddle')"
+          >
+            <img class="buttonImage" src="@/assets/puddle.png" />
+          </button>
+          <span class="buttonText">Puddle</span>
+        </div>
       </div>
     </div>
     <div>

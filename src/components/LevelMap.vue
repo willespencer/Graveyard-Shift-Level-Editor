@@ -84,12 +84,18 @@ import wallLight from "@/assets/wall_light.png";
 // other images that show up in front of floor tiles (including objects, barrels, doors, etc.)
 import playerImage from "@/assets/player.png";
 import mutantImage from "@/assets/mutant.png";
+
 import speakerImage from "@/assets/speaker.png";
+import puddleImage from "@/assets/puddle.png";
 
 import barrelImage from "@/assets/barrel3.png";
 import barrel4Image from "@/assets/barrel4.png";
 import crateImage from "@/assets/crate.png";
 import crate2Image from "@/assets/crate2.png";
+
+import computerImage from "@/assets/computer.png";
+import computerLeftImage from "@/assets/computer_side.png";
+import computerRightImage from "@/assets/computer_side_right.png";
 
 import doorImage from "@/assets/door.png";
 import doorSideImage from "@/assets/door_side.png";
@@ -104,6 +110,7 @@ import brickImage from "@/assets/brick.png";
 import bombImage from "@/assets/bomb.png";
 import keyImage from "@/assets/key.png";
 
+// arrows to display mutant paths
 import rightArrow from "@/assets/right_arrow.png";
 import upArrow from "@/assets/up_arrow.png";
 import leftArrow from "@/assets/left_arrow.png";
@@ -404,14 +411,22 @@ export default {
         return brickImage;
       } else if (this.isTileType(r, c, "barrel")) {
         return barrelImage;
-      } else if (this.isTileType(r, c, "speaker")) {
-        return speakerImage;
       } else if (this.isTileType(r, c, "barrel4")) {
         return barrel4Image;
       } else if (this.isTileType(r, c, "crate")) {
         return crateImage;
       } else if (this.isTileType(r, c, "crate2")) {
         return crate2Image;
+      } else if (this.isTileType(r, c, "speaker")) {
+        return speakerImage;
+      } else if (this.isTileType(r, c, "puddle")) {
+        return puddleImage;
+      } else if (this.isTileType(r, c, "computer")) {
+        return computerImage;
+      } else if (this.isTileType(r, c, "computerLeft")) {
+        return computerLeftImage;
+      } else if (this.isTileType(r, c, "computerRight")) {
+        return computerRightImage;
       } else if (this.isTileType(r, c, "door")) {
         if (this.shouldDisplaySide(r, c)) {
           return doorSideImage;

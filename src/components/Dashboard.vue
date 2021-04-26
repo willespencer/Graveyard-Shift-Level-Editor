@@ -328,6 +328,14 @@ export default {
           return "crate";
         case 14:
           return "crate2";
+        case 15:
+          return "puddle";
+        case 16:
+          return "computer";
+        case 17:
+          return "computerLeft";
+        case 18:
+          return "computerRight";
         default:
           return "floor";
       }
@@ -363,6 +371,14 @@ export default {
           return 13;
         case "crate2":
           return 14;
+        case "puddle":
+          return 15;
+        case "computer":
+          return 16;
+        case "computerLeft":
+          return 17;
+        case "computerRight":
+          return 18;
         default:
           return 0;
       }
