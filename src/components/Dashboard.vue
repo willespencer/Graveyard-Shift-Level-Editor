@@ -299,70 +299,72 @@ export default {
     },
     // converts the number representation of a tile in the game to the label in the editor
     convertNumberToTile(num) {
-      if (num === 1) {
-        return "wall";
-      } else if (num === 2) {
-        return "glass";
-      } else if (num === 3) {
-        return "cracked";
-      } else if (num === 4) {
-        return "goal";
-      } else if (num === 5) {
-        return "door";
-      } else if (num === 6) {
-        return "barrel";
-      } else if (num === 12) {
-        return "barrel4";
-      } else if (num === 13) {
-        return "crate";
-      } else if (num === 14) {
-        return "crate2";
-      } else if (num === 7) {
-        return "grate";
-      } else if (num === 8) {
-        return "light";
-      } else if (num === 9) {
-        return "unlock";
-      } else if (num === 10) {
-        return "open";
-      } else if (num === 11) {
-        return "speaker";
-      } else {
-        return "floor";
+      switch (num) {
+        case 1:
+          return "wall";
+        case 2:
+          return "glass";
+        case 3:
+          return "cracked";
+        case 4:
+          return "goal";
+        case 5:
+          return "door";
+        case 6:
+          return "barrel";
+        case 7:
+          return "grate";
+        case 8:
+          return "light";
+        case 9:
+          return "unlock";
+        case 10:
+          return "open";
+        case 11:
+          return "speaker";
+        case 12:
+          return "barrel4";
+        case 13:
+          return "crate";
+        case 14:
+          return "crate2";
+        default:
+          return "floor";
       }
     },
     // converts the tile name in the editor to the number representation of a tile in the game
     convertTileToNumber(tile) {
-      if (tile === "wall") {
-        return 1;
-      } else if (tile === "glass") {
-        return 2;
-      } else if (tile === "cracked") {
-        return 3;
-      } else if (tile === "goal") {
-        return 4;
-      } else if (tile === "door") {
-        return 5;
-      } else if (tile === "barrel") {
-        return 6;
-      } else if (tile === "barrel4") {
-        return 12;
-      } else if (tile === "crate") {
-        return 13;
-      } else if (tile === "crate2") {
-        return 14;
-      } else if (tile === "grate") {
-        return 7;
-      } else if (tile === "light") {
-        return 8;
-      } else if (tile === "unlock") {
-        return 9;
-      } else if (tile === "open") {
-        return 10;
-      } else if (tile === "speaker") {
-        return 11;
-      } else {
-        return 0;
+      switch (tile) {
+        case "wall":
+          return 1;
+        case "glass":
+          return 2;
+        case "cracked":
+          return 3;
+        case "goal":
+          return 4;
+        case "door":
+          return 5;
+        case "barrel":
+          return 6;
+        case "grate":
+          return 7;
+        case "light":
+          return 8;
+        case "unlock":
+          return 9;
+        case "open":
+          return 10;
+        case "speaker":
+          return 11;
+        case "barrel4":
+          return 12;
+        case "crate":
+          return 13;
+        case "crate2":
+          return 14;
+        default:
+          return 0;
       }
     },
     // create the json based on the map and call the output method
