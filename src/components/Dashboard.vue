@@ -547,12 +547,14 @@ export default {
         // if mutant positions matches a later point, do not include it
         let includeMutant = true;
         paths.forEach((path) => {
-          let startingPoint = path[0];
-          if (m[0] === startingPoint[0] && m[1] === startingPoint[1]) {
-            mutant["patrol-point-count"] = path.length;
-            mutant["patrol-path"] = path;
-          } else if (this.isArrayInArray(path, m)) {
-            includeMutant = false;
+          if (path.length > 1) {
+            let startingPoint = path[0];
+            if (m[0] === startingPoint[0] && m[1] === startingPoint[1]) {
+              mutant["patrol-point-count"] = path.length;
+              mutant["patrol-path"] = path;
+            } else if (this.isArrayInArray(path, m)) {
+              includeMutant = false;
+            }
           }
         });
 
