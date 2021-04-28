@@ -161,6 +161,7 @@ export default {
       handler(val, oldVal) {
         // if this is the first time dimensions are set, ignore handler
         if (!oldVal) {
+          this.$emit("level-loaded");
           return;
           // if dimensions have been set before but level is being loaded in, set tiles/objects as input
         } else if (this.levelLoading) {
