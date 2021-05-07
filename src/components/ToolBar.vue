@@ -38,6 +38,16 @@
         <div class="item">
           <button
             class="button"
+            @click="changePlacing('stairsUp')"
+            :disabled="isSelected('stairsUp')"
+          >
+            <img class="buttonImage" src="@/assets/stairs_up.png" />
+          </button>
+          <span class="buttonText">Stairs</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
             @click="changePlacing('wall')"
             :disabled="isSelected('wall')"
           >
@@ -148,6 +158,26 @@
         <div class="item">
           <button
             class="button"
+            @click="changePlacing('crate3')"
+            :disabled="isSelected('crate3')"
+          >
+            <img class="buttonImage" src="@/assets/crate3.png" />
+          </button>
+          <span class="buttonText">Crate 3</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('crate4')"
+            :disabled="isSelected('crate4')"
+          >
+            <img class="buttonImage" src="@/assets/crate4.png" />
+          </button>
+          <span class="buttonText">Crate 4</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
             @click="changePlacing('speaker')"
             :disabled="isSelected('speaker')"
           >
@@ -164,6 +194,16 @@
             <img class="buttonImage" src="@/assets/computer.png" />
           </button>
           <span class="buttonText">PC</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('computer2')"
+            :disabled="isSelected('computer2')"
+          >
+            <img class="buttonImage" src="@/assets/computer2.png" />
+          </button>
+          <span class="buttonText">PC 2</span>
         </div>
         <div class="item">
           <button

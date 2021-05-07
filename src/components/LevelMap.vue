@@ -37,14 +37,14 @@
 // TODO update with more types as they get added to the game
 
 // types of tiles that show up by themselves. Excludes walls because of other wall types
-const foregroundList = ["floor", "goal", "grate", "cracked"];
+const foregroundList = ["floor", "goal", "stairsUp", "grate"];
 
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = [
   "wall",
   "glass",
-  "cracked",
   "goal",
+  "stairsUp",
   "door",
   "unlock",
   "open",
@@ -73,6 +73,7 @@ const mutantTypes = ["normal", "normalLeft", "acute", "acuteLeft"];
 import floorImage from "@/assets/floor.png";
 import wallImage from "@/assets/walltop.png";
 import goalImage from "@/assets/goal.png";
+import stairsImage from "@/assets/stairs_up.png";
 import grateImage from "@/assets/floorgrate.png";
 import crackedImage from "@/assets/cracked.png";
 
@@ -92,8 +93,11 @@ import barrelImage from "@/assets/barrel3.png";
 import barrel4Image from "@/assets/barrel4.png";
 import crateImage from "@/assets/crate.png";
 import crate2Image from "@/assets/crate2.png";
+import crate3Image from "@/assets/crate3.png";
+import crate4Image from "@/assets/crate4.png";
 
 import computerImage from "@/assets/computer.png";
+import computer2Image from "@/assets/computer2.png";
 import computerLeftImage from "@/assets/computer_side.png";
 import computerRightImage from "@/assets/computer_side_right.png";
 
@@ -367,13 +371,13 @@ export default {
     getBackgroundImage(r, c) {
       if (this.isTileType(r, c, "goal")) {
         return goalImage;
+      } else if (this.isTileType(r, c, "stairsUp")) {
+        return stairsImage;
       } else if (
         this.isTileType(r, c, "grate") ||
         (this.objects[r][c] !== "empty" && this.tileTypes[r][c] === "grate")
       ) {
         return grateImage;
-      } else if (this.isTileType(r, c, "cracked")) {
-        return crackedImage;
       } else if (
         this.isTileType(r, c, "wall") ||
         this.isTileType(r, c, "light")
@@ -418,12 +422,20 @@ export default {
         return crateImage;
       } else if (this.isTileType(r, c, "crate2")) {
         return crate2Image;
+      } else if (this.isTileType(r, c, "crate3")) {
+        return crate3Image;
+      } else if (this.isTileType(r, c, "crate4")) {
+        return crate4Image;
+      } else if (this.isTileType(r, c, "cracked")) {
+        return crackedImage;
       } else if (this.isTileType(r, c, "speaker")) {
         return speakerImage;
       } else if (this.isTileType(r, c, "puddle")) {
         return puddleImage;
       } else if (this.isTileType(r, c, "computer")) {
         return computerImage;
+      } else if (this.isTileType(r, c, "computer2")) {
+        return computer2Image;
       } else if (this.isTileType(r, c, "computerLeft")) {
         return computerLeftImage;
       } else if (this.isTileType(r, c, "computerRight")) {

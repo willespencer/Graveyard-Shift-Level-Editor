@@ -336,6 +336,14 @@ export default {
           return "computerLeft";
         case 18:
           return "computerRight";
+        case 19:
+          return "computer2";
+        case 20:
+          return "crate3";
+        case 21:
+          return "crate4";
+        case 22:
+          return "stairsUp";
         default:
           return "floor";
       }
@@ -379,6 +387,14 @@ export default {
           return 17;
         case "computerRight":
           return 18;
+        case "computer2":
+          return 19;
+        case "crate3":
+          return 20;
+        case "crate4":
+          return 21;
+        case "stairsUp":
+          return 22;
         default:
           return 0;
       }
