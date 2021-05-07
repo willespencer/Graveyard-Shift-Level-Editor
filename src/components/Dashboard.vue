@@ -48,48 +48,52 @@
       <div class="instructions">
         <h3 class="instructionsTitle">Rules</h3>
         <ol class="instructionsList">
-          <li>There must be exactly 1 player on the level</li>
-          <li>There must be exactly 1 goal on the level</li>
+          <li class="instructionsItem">
+            There must be exactly 1 player on the level
+          </li>
+          <li class="instructionsItem">
+            There must be at least 1 goal on the level
+          </li>
         </ol>
-        <span
+        <span class="instructionsDesc"
           >If these rules are not followed, level cannot be downloaded!</span
         >
-        <h3 class="instructionsTitle">Mutant Patrol Path Instructions</h3>
+        <h3 class="instructionsTitle">Mutant Patrol Paths</h3>
         <ol class="instructionsList">
-          <li>
+          <li class="instructionsItem">
             Mutants can have patrol paths by clicking the path button in the
             toolbar and clicking on mutants in the patrolling order.
           </li>
-          <li>
+          <li class="instructionsItem">
             Clicking a different button in the toolbar will "complete" the
             current path. This path cannot be added to later.
           </li>
-          <li>
+          <li class="instructionsItem">
             To remove a path, replace one of the mutant icons in the patrol path
             with a different tile.
           </li>
-          <li>
+          <li class="instructionsItem">
             Note: arrows drawn on the map might not reflect the direction the
             mutant actually travels in the game.
           </li>
         </ol>
-        <h3 class="instructionsTitle">
-          Instructions For Downloading and Playing the Level
+        <h3 class="instructionsTitle instructionsTitle--last">
+          Instructions For Downloading
         </h3>
         <ol class="instructionsList">
-          <li>
+          <li class="instructionsItem">
             Set the level number as 1 + the current max level in the codebase.
           </li>
-          <li>
+          <li class="instructionsItem">
             After downloading, add the level to /core/assets/levels/
           </li>
-          <li>
+          <li class="instructionsItem">
             Add an import for this new JSON file in /core/assets/assets.json
           </li>
-          <li>
+          <li class="instructionsItem">
             Add a new level object in /core/assets/levels/levels.json
           </li>
-          <li>
+          <li class="instructionsItem">
             After all of this, the level should be playable!
           </li>
         </ol>
@@ -153,14 +157,14 @@ export default {
   },
   computed: {
     // return true if the current rules of the map are met
-    // rules currently require there to be exactly one player and one goal tile
+    // rules currently require there to be exactly one player and at least one goal tile
     areRulesMet() {
       if (this.tiles.length > 0) {
         let players = this.findObjects("player").concat(
           this.findObjects("playerLeft")
         );
         let goals = this.findObjects("goal");
-        return players.length === 1 && goals.length === 1;
+        return players.length === 1 && goals.length >= 1;
       }
       return false;
     },
@@ -683,14 +687,26 @@ export default {
   flex-direction: column;
   justify-content: left;
   text-align: left;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-top: 2rem;
   color: #88a6cd;
+  margin-left: 5rem;
 }
 
 .instructionsTitle {
   margin-bottom: 0;
   margin-top: 2rem;
+}
+
+.instructionsTitle--last {
+  margin-top: 1rem;
+}
+
+.instructionsList {
+  padding-left: 1rem;
+}
+
+.instructionsItem {
+  margin-top: 5px;
 }
 
 .logo {
