@@ -107,9 +107,7 @@ import LevelMap from "@/components/LevelMap.vue";
 import ToolBar from "@/components/ToolBar.vue";
 const stringify = require("json-stringify-pretty-compact");
 
-// UPDATE THE VERSION NUMBER WHEN THE JSON CHANGES
-// TODO - convert old versions to new versions somehow
-const versionNumber = "1.2";
+const versionNumber = "1.3";
 
 // types of objects - stored separately so that can be placed on other tiles
 const objectTypes = [
