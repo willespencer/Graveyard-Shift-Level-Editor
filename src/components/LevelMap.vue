@@ -573,6 +573,7 @@ export default {
   width: 45px;
   background-size: cover;
   position: relative;
+  cursor: pointer;
 
   user-drag: none;
   user-select: none;
