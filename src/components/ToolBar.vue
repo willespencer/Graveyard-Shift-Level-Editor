@@ -1,7 +1,10 @@
 <template>
   <div class="toolbar">
     <h3>Toolbar</h3>
-    <div>
+    <div v-if="isSelected('trigger')">
+      <triggers />
+    </div>
+    <div v-else>
       <div class="section">Tiles</div>
       <!-- // TODO - implement buttons with a v-for -->
       <div class="buttons">
@@ -239,8 +242,6 @@
           <span class="buttonText">PC 2</span>
         </div>
       </div>
-    </div>
-    <div>
       <div class="section">Characters</div>
       <div class="buttons">
         <div class="item">
@@ -349,13 +350,27 @@
           </button>
           <span class="buttonText">Mutant Path</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('trigger')"
+            :disabled="isSelected('trigger')"
+          >
+            <img class="buttonImage" src="@/assets/32x32.png" />
+          </button>
+          <span class="buttonText">Triggers</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Triggers from "@/components/Triggers.vue";
+
 export default {
+  components: { Triggers },
+
   data() {
     return {
       typePlacing: "floor",
