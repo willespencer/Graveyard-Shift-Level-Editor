@@ -38,16 +38,6 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('stairsUp')"
-            :disabled="isSelected('stairsUp')"
-          >
-            <img class="buttonImage" src="@/assets/stairs_up.png" />
-          </button>
-          <span class="buttonText">Stairs</span>
-        </div>
-        <div class="item">
-          <button
-            class="button"
             @click="changePlacing('wall')"
             :disabled="isSelected('wall')"
           >
@@ -68,12 +58,12 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('cracked')"
-            :disabled="isSelected('cracked')"
+            @click="changePlacing('stairsUp')"
+            :disabled="isSelected('stairsUp')"
           >
-            <img class="buttonImage" src="@/assets/cracked.png" />
+            <img class="buttonImage" src="@/assets/stairs_up.png" />
           </button>
-          <span class="buttonText">Crack</span>
+          <span class="buttonText">Stairs</span>
         </div>
         <div class="item">
           <button
@@ -108,6 +98,16 @@
         <div class="item">
           <button
             class="button"
+            @click="changePlacing('cracked')"
+            :disabled="isSelected('cracked')"
+          >
+            <img class="buttonImage" src="@/assets/cracked.png" />
+          </button>
+          <span class="buttonText">Crack</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
             @click="changePlacing('glass')"
             :disabled="isSelected('glass')"
           >
@@ -115,6 +115,29 @@
           </button>
           <span class="buttonText">Glass</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('speaker')"
+            :disabled="isSelected('speaker')"
+          >
+            <img class="buttonImage" src="@/assets/speaker.png" />
+          </button>
+          <span class="buttonText">Speaker</span>
+        </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('puddle')"
+            :disabled="isSelected('puddle')"
+          >
+            <img class="buttonImage" src="@/assets/puddle.png" />
+          </button>
+          <span class="buttonText">Puddle</span>
+        </div>
+      </div>
+      <div class="section">Aesthetics</div>
+      <div class="buttons">
         <div class="item">
           <button
             class="button"
@@ -178,32 +201,12 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('speaker')"
-            :disabled="isSelected('speaker')"
-          >
-            <img class="buttonImage" src="@/assets/speaker.png" />
-          </button>
-          <span class="buttonText">Speaker</span>
-        </div>
-        <div class="item">
-          <button
-            class="button"
             @click="changePlacing('computer')"
             :disabled="isSelected('computer')"
           >
             <img class="buttonImage" src="@/assets/computer.png" />
           </button>
           <span class="buttonText">PC</span>
-        </div>
-        <div class="item">
-          <button
-            class="button"
-            @click="changePlacing('computer2')"
-            :disabled="isSelected('computer2')"
-          >
-            <img class="buttonImage" src="@/assets/computer2.png" />
-          </button>
-          <span class="buttonText">PC 2</span>
         </div>
         <div class="item">
           <button
@@ -228,12 +231,12 @@
         <div class="item">
           <button
             class="button"
-            @click="changePlacing('puddle')"
-            :disabled="isSelected('puddle')"
+            @click="changePlacing('computer2')"
+            :disabled="isSelected('computer2')"
           >
-            <img class="buttonImage" src="@/assets/puddle.png" />
+            <img class="buttonImage" src="@/assets/computer2.png" />
           </button>
-          <span class="buttonText">Puddle</span>
+          <span class="buttonText">PC 2</span>
         </div>
       </div>
     </div>
@@ -300,16 +303,6 @@
           </button>
           <span class="buttonText">Acute (Left)</span>
         </div>
-        <div class="item">
-          <button
-            class="button"
-            @click="changePlacing('path')"
-            :disabled="isSelected('path')"
-          >
-            <img class="buttonImage flipped" src="@/assets/left_arrow.png" />
-          </button>
-          <span class="buttonText">Mutant Path</span>
-        </div>
       </div>
       <div class="section">Items</div>
       <div class="buttons">
@@ -342,6 +335,19 @@
             <img class="buttonImage" src="@/assets/bomb.png" />
           </button>
           <span class="buttonText">Bomb</span>
+        </div>
+      </div>
+      <div class="section">Customization</div>
+      <div class="buttons">
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('path')"
+            :disabled="isSelected('path')"
+          >
+            <img class="buttonImage flipped" src="@/assets/left_arrow.png" />
+          </button>
+          <span class="buttonText">Mutant Path</span>
         </div>
       </div>
     </div>
