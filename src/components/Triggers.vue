@@ -57,6 +57,73 @@
         </button>
       </div>
     </div>
+    <div class="field">
+      <div class="section">Position</div>
+      <div class="sizeInputs">
+        <input class="input" v-model="positionX" /> x
+        <input class="input" v-model="positionY" />
+      </div>
+    </div>
+    <div class="field">
+      <div class="section">Dimensions</div>
+      <div class="sizeInputs">
+        <input class="input" v-model="dimensionsX" /> x
+        <input class="input" v-model="dimensionsY" />
+      </div>
+    </div>
+    <div
+      class="field"
+      :class="{ isDisabled: !isSelected(typeButtons, 'Control') }"
+    >
+      <div class="section">
+        Display
+      </div>
+      <span class="subSection">(Control Only)</span>
+      <div class="sizeInputs">
+        <input
+          class="input"
+          v-model="displayX"
+          :disabled="!isSelected(typeButtons, 'Control')"
+        />
+        x
+        <input
+          class="input"
+          v-model="displayY"
+          :disabled="!isSelected(typeButtons, 'Control')"
+        />
+      </div>
+    </div>
+    <div class="field">
+      <div class="section">Text</div>
+      <div v-for="index in textInputs.length" :key="index">
+        <div v-if="isCurrentPage(index)">
+          <textarea
+            class="textArea"
+            v-model="textInputs[index - 1]"
+            rows="7"
+          ></textarea>
+          <div class="bottomText">
+            <span class="pageText">Page {{ index }}</span>
+            <div>
+              <button
+                @click="prevPage()"
+                :disabled="index <= 1"
+                class="pageButton"
+              >
+                Prev
+              </button>
+              <button
+                @click="nextPage()"
+                :disabled="!textInputs[index - 1]"
+                class="pageButton"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -93,6 +160,14 @@ export default {
       actionButtons,
       classButtons,
       itemButtons,
+      positionX: 0,
+      positionY: 0,
+      dimensionsX: 0,
+      dimensionsY: 0,
+      displayX: 0,
+      displayY: 0,
+      textInputs: [""],
+      currentTextPage: 1,
     };
   },
   methods: {
@@ -109,6 +184,23 @@ export default {
     // returns the boolean at key option in list
     isSelected(list, option) {
       return list[option];
+    },
+    // displays the previous page of the text input
+    prevPage() {
+      if (this.currentTextPage > 1) {
+        this.currentTextPage -= 1;
+      }
+    },
+    // displays the next page of the text input. Creates one if does not exist yet
+    nextPage() {
+      if (this.currentTextPage >= this.textInputs.length) {
+        this.textInputs.push("");
+      }
+      this.currentTextPage += 1;
+    },
+    // returns true if the pageNum is equal to the current page, and thus should be displayed
+    isCurrentPage(pageNum) {
+      return pageNum === this.currentTextPage;
     },
   },
 };
@@ -134,5 +226,56 @@ export default {
 }
 .button:hover {
   color: rgba(16, 16, 16, 0.3);
+}
+.sizeInputs {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  max-width: 2rem;
+  margin: 0 0.5rem;
+}
+
+.section {
+  margin-top: 1rem;
+}
+.subSection {
+  font-size: 14px;
+}
+
+.isDisabled {
+  opacity: 0.3;
+}
+
+.textArea {
+  background-color: #181818;
+  color: #88a6cd;
+  border-color: #88a6cd;
+  margin-top: 0.5rem;
+}
+
+.pageText {
+  font-size: 12px;
+}
+
+.pageButton {
+  font-size: 12px;
+}
+
+.pageButton:hover {
+  color: rgba(16, 16, 16, 0.3);
+}
+
+.pageButton:first-child {
+  margin-right: 5px;
+}
+
+.bottomText {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
 }
 </style>
