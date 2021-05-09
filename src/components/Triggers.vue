@@ -124,6 +124,11 @@
         </div>
       </div>
     </div>
+    <div class="bottom">
+      <button class="button" @click="addTrigger()" :disabled="!canAddTrigger">
+        Add Trigger
+      </button>
+    </div>
   </div>
 </template>
 
@@ -170,7 +175,60 @@ export default {
       currentTextPage: 1,
     };
   },
+  computed: {
+    // returns true if a trigger can be added with current data - i.e. if a button of each type has been selected;
+    canAddTrigger() {
+      return (
+        this.findTrueOptionUppercase(this.typeButtons) &&
+        this.findTrueOptionUppercase(this.actionButtons) &&
+        this.findTrueOptionUppercase(this.classButtons) &&
+        this.findTrueOptionUppercase(this.itemButtons)
+      );
+    },
+  },
   methods: {
+    // add a trigger to the running list of triggers on button submit
+    addTrigger() {
+      let trigger = {
+        type: this.findTrueOptionUppercase(this.typeButtons),
+        action: this.findTrueOptionUppercase(this.actionButtons),
+        "trigger-class": this.findTrueOptionUppercase(this.classButtons),
+        "item-type": this.findTrueOptionUppercase(this.itemButtons),
+        positons: [Number(this.positionX), Number(this.positionY)],
+        dimensions: [Number(this.dimensionsX), Number(this.dimensionsY)],
+      };
+
+      // if item-type is "USE", set it to empty like the game expects
+      if (trigger["item-type"] === "USE") {
+        trigger["item-type"] = "";
+      }
+
+      // only set display if of type control, and set page 1 of text to control property
+      if (trigger.type === "CONTROL") {
+        trigger.display = [Number(this.displayX), Number(this.displayY)];
+        trigger.control = this.textInputs[0];
+      } else {
+        // if no elements are empty, add textInputs as is. Otherwise, slice up to first empty element
+        let index = this.textInputs.indexOf("");
+        if (index < 0) {
+          trigger.text = this.textInputs;
+        } else {
+          trigger.text = this.textInputs.slice(0, index);
+        }
+      }
+
+      this.$emit("add-trigger", trigger);
+    },
+    // returns the single option in a list of buttons that is set to true in all uppercase
+    findTrueOptionUppercase(list) {
+      for (const key in list) {
+        if (list[key]) {
+          return key.toUpperCase();
+        }
+      }
+
+      return "";
+    },
     // set the key equivalent to the option string to true in list, set all others to false
     selectOption(list, option) {
       for (const key in list) {
@@ -277,5 +335,11 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 5px;
+}
+
+.bottom {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
 }
 </style>
