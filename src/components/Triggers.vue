@@ -71,6 +71,19 @@
         <input class="input" v-model="dimensionsY" />
       </div>
     </div>
+    <div class="field">
+      <div class="section">Repetitions</div>
+      <div class="sizeInputs">
+        <div class="repetitionWrapper">
+          <input class="repetitionInput" v-model="repetitionsMin" />
+          <span class="inputLabel">Min</span>
+        </div>
+        <div class="repetitionWrapper">
+          <input class="repetitionInput" v-model="repetitionsMax" />
+          <span class="inputLabel">Max</span>
+        </div>
+      </div>
+    </div>
     <div
       class="field"
       :class="{ isDisabled: !isSelected(typeButtons, 'Control') }"
@@ -177,8 +190,10 @@ export default {
       positionY: 0,
       dimensionsX: 0,
       dimensionsY: 0,
-      displayX: 0,
-      displayY: 0,
+      repetitionsMin: "",
+      repetitionsMax: "",
+      displayX: "",
+      displayY: "",
       textInputs: [""],
       currentTextPage: 1,
     };
@@ -219,6 +234,14 @@ export default {
 
         this.dimensionsX = val.dimensions[0];
         this.dimensionsY = val.dimensions[1];
+
+        if (val["min-repetitions"]) {
+          this.repetitionsMin = val["min-repetitions"];
+        }
+
+        if (val["max-repetitions"]) {
+          this.repetitionsMax = val["max-repetitions"];
+        }
 
         if (val.display && val.display.length > 0) {
           this.displayX = val.display[0];
@@ -261,9 +284,22 @@ export default {
         trigger["item-type"] = item;
       }
 
+      // set repetitions fields only if filled
+      if (this.repetitionsMin) {
+        trigger["min-repetitions"] = Number(this.repetitionsMin);
+      }
+      if (this.repetitionsMax) {
+        trigger["max-repetitions"] = Number(this.repetitionsMax);
+      }
+
       // only set display if of type control, and set page 1 of text to control property
       if (trigger.type === "CONTROL") {
-        trigger.display = [Number(this.displayX), Number(this.displayY)];
+        if (this.displayX && this.displayY) {
+          trigger.display = [Number(this.displayX), Number(this.displayY)];
+        } else {
+          // set display to an empty array if numbers not provided
+          trigger.display = [];
+        }
         trigger.control = this.textInputs[0];
       } else {
         // if no elements are empty, add textInputs as is. Otherwise, slice up to first empty element
@@ -335,8 +371,10 @@ export default {
       this.positionY = 0;
       this.dimensionsX = 0;
       this.dimensionsY = 0;
-      this.displayX = 0;
-      this.displayY = 0;
+      this.displayX = "";
+      this.displayY = "";
+      this.repetitionsMin = "";
+      this.repetitionsMax = "";
       this.textInputs = [""];
       this.currentTextPage = 1;
     },
@@ -387,6 +425,12 @@ export default {
 .input {
   max-width: 2rem;
   margin: 0 0.5rem;
+}
+
+.repetitionWrapper {
+  margin: 0 0.8rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .section {
@@ -444,5 +488,14 @@ export default {
 .returnButton:hover {
   background-color: #88a6cd;
   color: black;
+}
+
+.inputLabel {
+  font-size: 12px;
+  text-align: left;
+}
+
+.repetitionInput {
+  max-width: 2rem;
 }
 </style>

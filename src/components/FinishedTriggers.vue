@@ -11,6 +11,8 @@
         <span class="col">Trigger</span>
         <span class="col">Item</span>
         <span class="col">Display</span>
+        <span class="col">Min R</span>
+        <span class="col">Max R</span>
         <span class="col">Text / Control</span>
       </header>
       <div class="row" v-for="index in triggerList.length" :key="index">
@@ -33,6 +35,8 @@
         <span class="col">{{ getClass(index - 1) }}</span>
         <span class="col">{{ getItem(index - 1) }}</span>
         <span class="col">{{ getDisplay(index - 1) }}</span>
+        <span class="col">{{ getMinReps(index - 1) }}</span>
+        <span class="col">{{ getMaxReps(index - 1) }}</span>
         <span class="col">{{ getText(index - 1) }}</span>
       </div>
     </section>
@@ -79,12 +83,29 @@ export default {
       if (this.triggerList[index].display) {
         return this.getArrayString(this.triggerList[index].display);
       } else {
-        return "N/A";
+        return "";
       }
+    },
+    getMinReps(index) {
+      if (this.triggerList[index]["min-repetitions"]) {
+        return this.triggerList[index]["min-repetitions"];
+      }
+
+      return "";
+    },
+    getMaxReps(index) {
+      if (this.triggerList[index]["max-repetitions"]) {
+        return this.triggerList[index]["max-repetitions"];
+      }
+
+      return "";
     },
     getArrayString(arr) {
       if (arr.length === 0) {
         return "[ ]";
+      }
+      if (arr.length === 1) {
+        return `[${arr[0]}]`;
       }
       return `[${arr[0]}, ${arr[1]}]`;
     },
