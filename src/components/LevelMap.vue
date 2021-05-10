@@ -6,6 +6,7 @@
         v-for="(col, c) in width"
         v-bind:key="c"
         :style="{ backgroundImage: 'url(' + getBackgroundImage(r, c) + ')' }"
+        :class="{ hasTrigger: hasTrigger(r, c) }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
         @mouseup="up()"
@@ -128,6 +129,7 @@ export default {
     inputObjects: Array,
     inputPaths: Array,
     levelLoading: Boolean,
+    triggerList: Array,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
@@ -552,6 +554,33 @@ export default {
       });
       return contains;
     },
+    // returns true if there is a trigger at r, c
+    hasTrigger(r, c) {
+      for (let i = 0; i < this.triggerList.length; i++) {
+        let trigger = this.triggerList[i];
+
+        // flip to match game
+        let newR = this.height - r - 1;
+
+        // handle non-integer positions
+        let xPos = Math.floor(trigger.position[0]);
+        let yPos = Math.floor(trigger.position[1]);
+        let xDim = Math.ceil(trigger.dimensions[0]);
+        let yDim = Math.ceil(trigger.dimensions[1]);
+
+        if (xPos === c && yPos === newR) {
+          return true;
+        } else if (
+          c >= xPos &&
+          c <= xPos + (xDim - 1) &&
+          newR >= yPos &&
+          newR <= yPos + (yDim - 1)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    },
   },
 };
 </script>
@@ -637,5 +666,11 @@ export default {
   top: 7px;
   right: 7px;
   opacity: 50%;
+}
+
+.hasTrigger {
+  border: 1px solid red;
+  width: 43px;
+  height: 43px;
 }
 </style>

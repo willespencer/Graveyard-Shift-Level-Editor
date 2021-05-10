@@ -42,6 +42,7 @@
         :inputObjects="inputObjects"
         :inputPaths="inputPaths"
         :levelLoading="levelLoading"
+        :triggerList="triggerList"
         @level-loaded="setLevelLoaded"
         @tile-changed="updateTilesAndObjects"
       />
@@ -96,6 +97,13 @@
             the triggers menu.
           </li>
           <li class="instructionsItem">
+            Use the icon buttons to edit and delete existing triggers.
+          </li>
+          <li class="instructionsItem">
+            Triggers will show up in their rough locations (if not using
+            integers) on the map after being added.
+          </li>
+          <li class="instructionsItem">
             See the documentation
             <a
               href="https://docs.google.com/document/d/1f4QII6ioYrXxkfo8nIl4pulZcKYwYetdZBPdwL1Ert4/edit"
@@ -104,8 +112,8 @@
             to explore the options available.
           </li>
           <li class="instructionsItem">
-            Note that clicking on the map while in the trigger menu will place a
-            floor tile.
+            Note that accidently clicking on the map while in the trigger menu
+            will place a floor tile.
           </li>
         </ol>
         <h3 class="instructionsTitle instructionsTitle--last">
