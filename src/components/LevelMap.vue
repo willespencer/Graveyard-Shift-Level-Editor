@@ -1,12 +1,11 @@
 <template>
   <div class="levelmap">
-    <div class="row" v-for="(row, r) in height" v-bind:key="r">
+    <div class="row" v-for="(row, r) in height" :key="r">
       <div
         class="col"
         v-for="(col, c) in width"
-        v-bind:key="c"
+        :key="c"
         :style="{ backgroundImage: 'url(' + getBackgroundImage(r, c) + ')' }"
-        :class="{ hasTrigger: hasTrigger(r, c) }"
         @mousedown="down(r, c)"
         @mousemove="move(r, c)"
         @mouseup="up()"
@@ -31,6 +30,17 @@
         />
       </div>
     </div>
+    <div
+      class="triggerClass"
+      v-for="index in triggerList.length"
+      :key="index + 10000"
+      :style="{
+        bottom: `calc(45px * ${getBottomValue(index - 1)})`,
+        left: `calc(45px * ${getLeftValue(index - 1)})`,
+        height: `calc(45px * ${getHeight(index - 1)})`,
+        width: `calc(45px * ${getWidth(index - 1)})`,
+      }"
+    ></div>
   </div>
 </template>
 
@@ -554,32 +564,22 @@ export default {
       });
       return contains;
     },
-    // returns true if there is a trigger at r, c
-    hasTrigger(r, c) {
-      for (let i = 0; i < this.triggerList.length; i++) {
-        let trigger = this.triggerList[i];
-
-        // flip to match game
-        let newR = this.height - r - 1;
-
-        // handle non-integer positions
-        let xPos = Math.floor(trigger.position[0]);
-        let yPos = Math.floor(trigger.position[1]);
-        let xDim = Math.ceil(trigger.dimensions[0]);
-        let yDim = Math.ceil(trigger.dimensions[1]);
-
-        if (xPos === c && yPos === newR) {
-          return true;
-        } else if (
-          c >= xPos &&
-          c <= xPos + (xDim - 1) &&
-          newR >= yPos &&
-          newR <= yPos + (yDim - 1)
-        ) {
-          return true;
-        }
-      }
-      return false;
+    // helper functions to get style values for displaying the correct trigger locations
+    getBottomValue(index) {
+      let trigger = this.triggerList[index];
+      return trigger.position[1];
+    },
+    getLeftValue(index) {
+      let trigger = this.triggerList[index];
+      return trigger.position[0];
+    },
+    getHeight(index) {
+      let trigger = this.triggerList[index];
+      return trigger.dimensions[1];
+    },
+    getWidth(index) {
+      let trigger = this.triggerList[index];
+      return trigger.dimensions[0];
     },
   },
 };
@@ -591,6 +591,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .row {
@@ -668,9 +669,9 @@ export default {
   opacity: 50%;
 }
 
-.hasTrigger {
+.triggerClass {
   border: 1px solid red;
-  width: 43px;
-  height: 43px;
+  position: absolute;
+  z-index: 5;
 }
 </style>

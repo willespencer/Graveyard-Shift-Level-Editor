@@ -100,8 +100,8 @@
             Use the icon buttons to edit and delete existing triggers.
           </li>
           <li class="instructionsItem">
-            Triggers will show up in their rough locations (if not using
-            integers) on the map after being added.
+            Triggers will show up in their exact locations on the map after
+            being added.
           </li>
           <li class="instructionsItem">
             See the documentation
@@ -113,7 +113,7 @@
           </li>
           <li class="instructionsItem">
             Note that accidently clicking on the map while in the trigger menu
-            will place a floor tile.
+            will place a floor tile, so be careful.
           </li>
         </ol>
         <h3 class="instructionsTitle instructionsTitle--last">
