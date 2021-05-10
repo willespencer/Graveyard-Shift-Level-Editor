@@ -28,7 +28,11 @@
       </div>
     </div>
     <div class="toolsAndMapWrapper" v-if="displayMap">
-      <tool-bar class="toolbar" @update-tile-placing="updateTilePlacing" />
+      <tool-bar
+        class="toolbar"
+        @update-tile-placing="updateTilePlacing"
+        @add-trigger="addTrigger"
+      />
       <level-map
         class="map"
         :dimensions="dimensions"
@@ -75,6 +79,21 @@
           <li class="instructionsItem">
             Note: arrows drawn on the map might not reflect the direction the
             mutant actually travels in the game.
+          </li>
+        </ol>
+        <h3 class="instructionsTitle">Trigger Menu</h3>
+        <ol class="instructionsList">
+          <li class="instructionsItem">
+            Dialogue Triggers and Control Triggers can be created and viewed by
+            going to the triggers menu.
+          </li>
+          <li class="instructionsItem">
+            See the documentation
+            <a
+              href="https://docs.google.com/document/d/1f4QII6ioYrXxkfo8nIl4pulZcKYwYetdZBPdwL1Ert4/edit"
+              >here</a
+            >
+            to explore the options available.
           </li>
         </ol>
         <h3 class="instructionsTitle instructionsTitle--last">
@@ -143,6 +162,7 @@ export default {
       dimensions: [0, 0],
       levelLoading: false,
       fileName: "No file chosen",
+      triggerList: [],
     };
   },
   // event to retrieve the file name after selected
@@ -194,6 +214,10 @@ export default {
     // update the tile being placed when a button is clicked on in ToolBar
     updateTilePlacing(type) {
       this.typePlacing = type;
+    },
+    // add a trigger created from the trigger toolbar
+    addTrigger(trigger) {
+      this.triggerList.push(trigger);
     },
     // load in an existing map
     // code adapted from: https://stackoverflow.com/questions/59155812/vue-upload-local-json-file
@@ -440,6 +464,7 @@ export default {
         "mutant-spawns": mutantSpawns,
         "item-count": itemSpawns.length,
         "item-spawns": itemSpawns,
+        triggers: this.triggerList,
       };
       json["metadata"] = metadata;
 

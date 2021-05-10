@@ -2,7 +2,7 @@
   <div class="toolbar">
     <h3>Toolbar</h3>
     <div v-if="isSelected('trigger')">
-      <triggers />
+      <triggers @add-trigger="addTrigger" @close-triggers="closeTriggerMenu" />
     </div>
     <div v-else>
       <div class="section">Tiles</div>
@@ -370,7 +370,6 @@ import Triggers from "@/components/Triggers.vue";
 
 export default {
   components: { Triggers },
-
   data() {
     return {
       typePlacing: "floor",
@@ -386,6 +385,13 @@ export default {
     // used to determine which button is disabled
     isSelected(type) {
       return type == this.typePlacing;
+    },
+    addTrigger(trigger) {
+      this.$emit("add-trigger", trigger);
+    },
+    // change the placing tile to floor if trigger menu closed
+    closeTriggerMenu() {
+      this.changePlacing("floor");
     },
   },
 };

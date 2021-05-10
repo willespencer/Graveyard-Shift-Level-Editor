@@ -1,6 +1,6 @@
 <template>
   <div class="triggers">
-    <h4>Add Trigger</h4>
+    <h4>Create a New Trigger</h4>
     <div class="field">
       <div class="section">Type</div>
       <div class="buttons">
@@ -94,7 +94,9 @@
       </div>
     </div>
     <div class="field">
-      <div class="section">Text</div>
+      <div class="section">
+        <span v-if="isSelected(typeButtons, 'Control')">Control </span>Text
+      </div>
       <div v-for="index in textInputs.length" :key="index">
         <div v-if="isCurrentPage(index)">
           <textarea
@@ -102,8 +104,8 @@
             v-model="textInputs[index - 1]"
             rows="7"
           ></textarea>
-          <div class="bottomText">
-            <span class="pageText">Page {{ index }}</span>
+          <div class="bottomText" v-if="isSelected(typeButtons, 'Dialogue')">
+            <span class="pageText">Dialogue {{ index }}</span>
             <div>
               <button
                 @click="prevPage()"
@@ -127,6 +129,9 @@
     <div class="bottom">
       <button class="button" @click="addTrigger()" :disabled="!canAddTrigger">
         Add Trigger
+      </button>
+      <button class="button returnButton" @click="returnToToolbar()">
+        Return to Toolbar
       </button>
     </div>
   </div>
@@ -194,7 +199,7 @@ export default {
         action: this.findTrueOptionUppercase(this.actionButtons),
         "trigger-class": this.findTrueOptionUppercase(this.classButtons),
         "item-type": this.findTrueOptionUppercase(this.itemButtons),
-        positons: [Number(this.positionX), Number(this.positionY)],
+        position: [Number(this.positionX), Number(this.positionY)],
         dimensions: [Number(this.dimensionsX), Number(this.dimensionsY)],
       };
 
@@ -218,6 +223,7 @@ export default {
       }
 
       this.$emit("add-trigger", trigger);
+      this.clearData();
     },
     // returns the single option in a list of buttons that is set to true in all uppercase
     findTrueOptionUppercase(list) {
@@ -237,6 +243,11 @@ export default {
         } else {
           list[key] = false;
         }
+      }
+
+      // special case, but make sure page is set to page 1 if on control
+      if (option === "Control") {
+        this.currentTextPage = 1;
       }
     },
     // returns the boolean at key option in list
@@ -259,6 +270,31 @@ export default {
     // returns true if the pageNum is equal to the current page, and thus should be displayed
     isCurrentPage(pageNum) {
       return pageNum === this.currentTextPage;
+    },
+    // resets trigger data back to starting point
+    clearData() {
+      this.resetButtons(this.typeButtons);
+      this.resetButtons(this.actionButtons);
+      this.resetButtons(this.classButtons);
+      this.resetButtons(this.itemButtons);
+
+      this.positionX = 0;
+      this.positionY = 0;
+      this.dimensionsX = 0;
+      this.dimensionsY = 0;
+      this.displayX = 0;
+      this.displayY = 0;
+      this.textInputs = [""];
+      this.currentTextPage = 1;
+    },
+    resetButtons(list) {
+      for (const key in list) {
+        list[key] = false;
+      }
+    },
+    // close the trigger menu
+    returnToToolbar() {
+      this.$emit("close-triggers");
     },
   },
 };
@@ -340,6 +376,16 @@ export default {
 .bottom {
   margin-top: 1rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.returnButton {
+  background-color: #181818;
+  color: #88a6cd;
+}
+
+.returnButton:hover {
+  background-color: #88a6cd;
+  color: black;
 }
 </style>
