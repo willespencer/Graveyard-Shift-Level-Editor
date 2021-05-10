@@ -45,6 +45,11 @@
         @tile-changed="updateTilesAndObjects"
       />
     </div>
+    <finished-triggers
+      class="finishedTriggers"
+      :triggerList="triggerList"
+      v-if="typePlacing === 'trigger'"
+    />
     <div v-if="displayMap" class="outputWrapper">
       <span>Level Number:</span>
       <input class="input" v-model="levelNumber" />
@@ -81,7 +86,7 @@
             mutant actually travels in the game.
           </li>
         </ol>
-        <h3 class="instructionsTitle">Trigger Menu</h3>
+        <h3 class="instructionsTitle instructionsTitle--last">Trigger Menu</h3>
         <ol class="instructionsList">
           <li class="instructionsItem">
             Dialogue Triggers and Control Triggers can be created and viewed by
@@ -94,6 +99,10 @@
               >here</a
             >
             to explore the options available.
+          </li>
+          <li class="instructionsItem">
+            Note that clicking on the map while in the trigger menu will place a
+            floor tile.
           </li>
         </ol>
         <h3 class="instructionsTitle instructionsTitle--last">
@@ -124,6 +133,7 @@
 <script>
 import LevelMap from "@/components/LevelMap.vue";
 import ToolBar from "@/components/ToolBar.vue";
+import FinishedTriggers from "./FinishedTriggers.vue";
 const stringify = require("json-stringify-pretty-compact");
 
 const versionNumber = "1.3";
@@ -142,7 +152,7 @@ const objectTypes = [
 ];
 
 export default {
-  components: { LevelMap, ToolBar },
+  components: { LevelMap, ToolBar, FinishedTriggers },
   data() {
     return {
       width: 0,
@@ -305,6 +315,10 @@ export default {
       } else {
         objects[this.height - playerSpawn[1] - 1][playerSpawn[0]] = "player";
       }
+
+      // set triggerList from json
+      // TODO - does position or anything else need to be transformed?
+      this.triggerList = json.metadata["triggers"];
 
       // set input tiles and display the map
       this.inputTiles = tiles;
@@ -762,5 +776,9 @@ input[type="file"] {
 .fileLabelButton:hover:not([disabled]) {
   background-color: #51616e;
   border-color: #51616e;
+}
+
+.finishedTriggers {
+  margin: 0 5rem;
 }
 </style>
