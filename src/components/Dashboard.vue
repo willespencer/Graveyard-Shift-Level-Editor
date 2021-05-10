@@ -501,6 +501,7 @@ export default {
         "mutant-spawns": mutantSpawns,
         "item-count": itemSpawns.length,
         "item-spawns": itemSpawns,
+        "trigger-count": this.triggerList.length,
         triggers: this.triggerList,
       };
       json["metadata"] = metadata;
