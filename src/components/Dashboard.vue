@@ -30,6 +30,7 @@
     <div class="toolsAndMapWrapper" v-if="displayMap">
       <tool-bar
         class="toolbar"
+        :triggerToEdit="triggerToEdit"
         @update-tile-placing="updateTilePlacing"
         @add-trigger="addTrigger"
       />
@@ -49,6 +50,8 @@
       class="finishedTriggers"
       :triggerList="triggerList"
       v-if="typePlacing === 'trigger'"
+      @delete-trigger="deleteTrigger"
+      @edit-trigger="editTrigger"
     />
     <div v-if="displayMap" class="outputWrapper">
       <span>Level Number:</span>
@@ -89,8 +92,8 @@
         <h3 class="instructionsTitle instructionsTitle--last">Trigger Menu</h3>
         <ol class="instructionsList">
           <li class="instructionsItem">
-            Dialogue Triggers and Control Triggers can be created and viewed by
-            going to the triggers menu.
+            Dialogue and Control Triggers can be created and viewed by going to
+            the triggers menu.
           </li>
           <li class="instructionsItem">
             See the documentation
@@ -173,6 +176,7 @@ export default {
       levelLoading: false,
       fileName: "No file chosen",
       triggerList: [],
+      triggerToEdit: null,
     };
   },
   // event to retrieve the file name after selected
@@ -228,6 +232,17 @@ export default {
     // add a trigger created from the trigger toolbar
     addTrigger(trigger) {
       this.triggerList.push(trigger);
+    },
+    // delete a trigger clicked on in the finished triggers
+    deleteTrigger(index) {
+      this.triggerList = this.triggerList
+        .slice(0, index)
+        .concat(this.triggerList.slice(index + 1));
+    },
+    // edit a trigger
+    editTrigger(index) {
+      this.triggerToEdit = this.triggerList[index];
+      this.deleteTrigger(index);
     },
     // load in an existing map
     // code adapted from: https://stackoverflow.com/questions/59155812/vue-upload-local-json-file

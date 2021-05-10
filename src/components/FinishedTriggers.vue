@@ -3,6 +3,7 @@
     <h3>Finished Triggers</h3>
     <section class="section">
       <header class="header">
+        <span class="col"></span>
         <span class="col">Type</span>
         <span class="col">Pos</span>
         <span class="col">Dim</span>
@@ -13,6 +14,14 @@
         <span class="col">Text / Control</span>
       </header>
       <div class="row" v-for="index in triggerList.length" :key="index">
+        <span class="col">
+          <button class="unstyledButton" @click="deleteTrigger(index - 1)">
+            <img class="trash" src="@/assets/trash.svg" />
+          </button>
+          <button class="unstyledButton" @click="editTrigger(index - 1)">
+            <img class="edit" src="@/assets/edit.svg" />
+          </button>
+        </span>
         <span class="col">{{ triggerList[index - 1].type }}</span>
         <span class="col">{{
           getArrayString(triggerList[index - 1].position)
@@ -39,6 +48,12 @@ export default {
     triggerList: Array,
   },
   methods: {
+    deleteTrigger(index) {
+      this.$emit("delete-trigger", index);
+    },
+    editTrigger(index) {
+      this.$emit("edit-trigger", index);
+    },
     getText(index) {
       if (this.triggerList[index].type === "DIALOGUE") {
         return this.triggerList[index].text;
@@ -62,12 +77,15 @@ export default {
     },
     getDisplay(index) {
       if (this.triggerList[index].display) {
-        return this.triggerList[index].display;
+        return this.getArrayString(this.triggerList[index].display);
       } else {
         return "N/A";
       }
     },
     getArrayString(arr) {
+      if (arr.length === 0) {
+        return "[ ]";
+      }
       return `[${arr[0]}, ${arr[1]}]`;
     },
   },
@@ -75,9 +93,6 @@ export default {
 </script>
 
 <style scoped>
-.finished {
-}
-
 .section {
   display: table;
   width: 100%;
@@ -94,5 +109,34 @@ export default {
   padding: 2px;
   vertical-align: middle;
   min-width: 60px;
+}
+
+.trash {
+  height: 15px;
+  color: red;
+}
+
+.edit {
+  margin-left: 3px;
+  height: 15px;
+}
+
+.unstyledButton {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.unstyledButton:hover {
+  background-color: transparent;
+}
+
+.unstyledButton:first-child {
+  margin-right: 3px;
+}
+
+.unstyledButton:last-child {
+  margin-left: 3px;
 }
 </style>

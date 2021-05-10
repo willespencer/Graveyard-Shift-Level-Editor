@@ -2,7 +2,11 @@
   <div class="toolbar">
     <h3>Toolbar</h3>
     <div v-if="isSelected('trigger')">
-      <triggers @add-trigger="addTrigger" @close-triggers="closeTriggerMenu" />
+      <triggers
+        :triggerToEdit="triggerToEdit"
+        @add-trigger="addTrigger"
+        @close-triggers="closeTriggerMenu"
+      />
     </div>
     <div v-else>
       <div class="section">Tiles</div>
@@ -370,6 +374,9 @@ import Triggers from "@/components/Triggers.vue";
 
 export default {
   components: { Triggers },
+  props: {
+    triggerToEdit: Object,
+  },
   data() {
     return {
       typePlacing: "floor",

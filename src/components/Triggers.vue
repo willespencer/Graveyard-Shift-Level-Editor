@@ -139,6 +139,9 @@
 
 <script>
 export default {
+  props: {
+    triggerToEdit: Object,
+  },
   data() {
     let typeButtons = {
       Dialogue: false,
@@ -179,6 +182,57 @@ export default {
       textInputs: [""],
       currentTextPage: 1,
     };
+  },
+  watch: {
+    triggerToEdit: {
+      immediate: true,
+      handler(val) {
+        console.log(val);
+        if (!val) {
+          return;
+        }
+        // if a trigger is edited, load in the data
+        this.clearData();
+
+        this.selectOption(
+          this.actionButtons,
+          this.uppercaseFirstLetter(val.action)
+        );
+        this.selectOption(
+          this.typeButtons,
+          this.uppercaseFirstLetter(val.type)
+        );
+
+        let trigger = "Player";
+        if (val["trigger-class"] && val["trigger-class"] !== "") {
+          trigger = this.uppercaseFirstLetter(val["trigger-class"]);
+        }
+        this.selectOption(this.classButtons, trigger);
+
+        let item = "Use";
+        if (val["item-type"] && val["item-type"] !== "") {
+          item = this.uppercaseFirstLetter(val["item-type"]);
+        }
+        this.selectOption(this.itemButtons, item);
+
+        this.positionX = val.position[0];
+        this.positionY = val.position[1];
+
+        this.dimensionsX = val.dimensions[0];
+        this.dimensionsY = val.dimensions[1];
+
+        if (val.display && val.display.length > 0) {
+          this.displayX = val.display[0];
+          this.displayY = val.display[1];
+        }
+
+        if (val.type === "DIALOGUE") {
+          this.textInputs = val.text;
+        } else {
+          this.textInputs[0] = val.control;
+        }
+      },
+    },
   },
   computed: {
     // returns true if a trigger can be added with current data - i.e. if a button of each type has been selected;
@@ -295,6 +349,10 @@ export default {
     // close the trigger menu
     returnToToolbar() {
       this.$emit("close-triggers");
+    },
+    // return the string with only the first letter in uppercase
+    uppercaseFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     },
   },
 };
