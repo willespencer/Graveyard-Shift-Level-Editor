@@ -71,7 +71,7 @@ export default {
     getItem(index) {
       let triggerItem = this.triggerList[index]["item-type"];
       if (!triggerItem || triggerItem === "") {
-        return "USE";
+        return "";
       }
       return triggerItem;
     },

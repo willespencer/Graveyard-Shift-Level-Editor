@@ -166,7 +166,7 @@ export default {
       Brick: false,
       Bomb: false,
       Key: false,
-      Use: false,
+      None: false,
     };
     return {
       typeButtons,
@@ -187,11 +187,10 @@ export default {
     triggerToEdit: {
       immediate: true,
       handler(val) {
-        console.log(val);
         if (!val) {
           return;
         }
-        // if a trigger is edited, load in the data
+        // if a trigger is edited, clear existing options and load in the data
         this.clearData();
 
         this.selectOption(
@@ -209,7 +208,7 @@ export default {
         }
         this.selectOption(this.classButtons, trigger);
 
-        let item = "Use";
+        let item = "None";
         if (val["item-type"] && val["item-type"] !== "") {
           item = this.uppercaseFirstLetter(val["item-type"]);
         }
@@ -252,14 +251,14 @@ export default {
         type: this.findTrueOptionUppercase(this.typeButtons),
         action: this.findTrueOptionUppercase(this.actionButtons),
         "trigger-class": this.findTrueOptionUppercase(this.classButtons),
-        "item-type": this.findTrueOptionUppercase(this.itemButtons),
         position: [Number(this.positionX), Number(this.positionY)],
         dimensions: [Number(this.dimensionsX), Number(this.dimensionsY)],
       };
 
-      // if item-type is "USE", set it to empty like the game expects
-      if (trigger["item-type"] === "USE") {
-        trigger["item-type"] = "";
+      // do not set item-type if it is currently "NONE"
+      let item = this.findTrueOptionUppercase(this.itemButtons);
+      if (item !== "NONE") {
+        trigger["item-type"] = item;
       }
 
       // only set display if of type control, and set page 1 of text to control property
