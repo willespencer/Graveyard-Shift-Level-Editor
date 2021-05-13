@@ -131,6 +131,8 @@ import upArrow from "@/assets/up_arrow.png";
 import leftArrow from "@/assets/left_arrow.png";
 import downArrow from "@/assets/down_arrow.png";
 
+import checkpointImage from "@/assets/checkpoint.png";
+
 export default {
   props: {
     dimensions: Array,
@@ -452,6 +454,8 @@ export default {
         return computerLeftImage;
       } else if (this.isTileType(r, c, "computerRight")) {
         return computerRightImage;
+      } else if (this.isTileType(r, c, "checkpoint")) {
+        return checkpointImage;
       } else if (this.isTileType(r, c, "door")) {
         if (this.shouldDisplaySide(r, c)) {
           return doorSideImage;

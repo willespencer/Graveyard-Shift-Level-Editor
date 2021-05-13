@@ -67,6 +67,9 @@
           <li class="instructionsItem">
             There must be at least 1 goal on the level
           </li>
+          <li class="instructionsItem">
+            There can be at most 1 checkpoint on the level
+          </li>
         </ol>
         <span class="instructionsDesc"
           >If these rules are not followed, level cannot be downloaded!</span
@@ -204,7 +207,10 @@ export default {
           this.findObjects("playerLeft")
         );
         let goals = this.findObjects("goal");
-        return players.length === 1 && goals.length >= 1;
+        let checkpoints = this.findObjects("checkpoint");
+        return (
+          players.length === 1 && goals.length >= 1 && checkpoints.length <= 1
+        );
       }
       return false;
     },
@@ -407,6 +413,8 @@ export default {
           return "crate4";
         case 22:
           return "stairsUp";
+        case 23:
+          return "checkpoint";
         default:
           return "floor";
       }
@@ -458,6 +466,8 @@ export default {
           return 21;
         case "stairsUp":
           return 22;
+        case "checkpoint":
+          return 23;
         default:
           return 0;
       }
@@ -503,6 +513,7 @@ export default {
         "item-spawns": itemSpawns,
         "trigger-count": this.triggerList.length,
         triggers: this.triggerList,
+        "checkpoint-spawn": this.findObjects("checkpoint")[0],
       };
       json["metadata"] = metadata;
 
@@ -548,7 +559,6 @@ export default {
     },
     // returns a 2d array representing all positions of objectType
     // used to find players, mutants, bombs, bricks, keys, etc.
-    // TODO - added transforms to here and other methods to match json, maybe json file should be changed
     findObjects(objectType) {
       let objectList = [];
       let matrix = [];

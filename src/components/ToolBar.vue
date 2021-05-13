@@ -142,6 +142,16 @@
           </button>
           <span class="buttonText">Puddle</span>
         </div>
+        <div class="item">
+          <button
+            class="button"
+            @click="changePlacing('checkpoint')"
+            :disabled="isSelected('checkpoint')"
+          >
+            <img class="buttonImage" src="@/assets/checkpoint.png" />
+          </button>
+          <span class="buttonText">Check-point</span>
+        </div>
       </div>
       <div class="section">Aesthetics</div>
       <div class="buttons">
