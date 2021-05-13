@@ -175,11 +175,12 @@ export default {
       Bomb: false,
       Key: false,
     };
+    // set the item default to be none, as is most often the case
     let itemButtons = {
       Brick: false,
       Bomb: false,
       Key: false,
-      None: false,
+      None: true,
     };
     return {
       typeButtons,
@@ -188,8 +189,8 @@ export default {
       itemButtons,
       positionX: 0,
       positionY: 0,
-      dimensionsX: 0,
-      dimensionsY: 0,
+      dimensionsX: 1,
+      dimensionsY: 1,
       repetitionsMin: "",
       repetitionsMax: "",
       displayX: "",
@@ -257,13 +258,16 @@ export default {
     },
   },
   computed: {
-    // returns true if a trigger can be added with current data - i.e. if a button of each type has been selected;
+    // returns true if a trigger can be added with current data - i.e. if a button of each type has been selected and text has been written
+    // dimensions and position will default to 0 if not filled out, and all other fields are optional
     canAddTrigger() {
       return (
         this.findTrueOptionUppercase(this.typeButtons) &&
         this.findTrueOptionUppercase(this.actionButtons) &&
         this.findTrueOptionUppercase(this.classButtons) &&
-        this.findTrueOptionUppercase(this.itemButtons)
+        this.findTrueOptionUppercase(this.itemButtons) &&
+        this.textInputs.length > 0 &&
+        this.textInputs[0].length > 0
       );
     },
   },
@@ -313,6 +317,7 @@ export default {
 
       this.$emit("add-trigger", trigger);
       this.clearData();
+      this.itemButtons["None"] = true;
     },
     // returns the single option in a list of buttons that is set to true in all uppercase
     findTrueOptionUppercase(list) {
@@ -369,8 +374,8 @@ export default {
 
       this.positionX = 0;
       this.positionY = 0;
-      this.dimensionsX = 0;
-      this.dimensionsY = 0;
+      this.dimensionsX = 1;
+      this.dimensionsY = 1;
       this.displayX = "";
       this.displayY = "";
       this.repetitionsMin = "";
