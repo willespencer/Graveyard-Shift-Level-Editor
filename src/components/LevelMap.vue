@@ -31,7 +31,7 @@
       </div>
     </div>
     <div
-      class="triggerClass"
+      class="trigger"
       v-for="index in triggerList.length"
       :key="index + 10000"
       :style="{
@@ -676,9 +676,10 @@ export default {
   opacity: 50%;
 }
 
-.triggerClass {
+.trigger {
   border: 1px solid red;
   position: absolute;
   z-index: 5;
+  pointer-events: none;
 }
 </style>
