@@ -48,7 +48,7 @@
 // TODO update with more types as they get added to the game
 
 // types of tiles that show up by themselves. Excludes walls because of other wall types
-const foregroundList = ["floor", "goal", "stairsUp", "grate"];
+const foregroundList = ["floor", "goal", "stairsUp", "grate", "puddle"];
 
 // types of tiles that can act as walls for doors/glass to attach to
 const wallTypes = [
@@ -75,7 +75,7 @@ const objectTypes = [
   "bomb",
 ];
 // types of tiles that can be placed on top of
-const pureTiles = ["floor", "grate"];
+const pureTiles = ["floor", "grate", "puddle"];
 
 // types of mutants
 const mutantTypes = ["normal", "normalLeft", "acute", "acuteLeft"];
@@ -388,6 +388,11 @@ export default {
       } else if (this.isTileType(r, c, "stairsUp")) {
         return stairsImage;
       } else if (
+        this.isTileType(r, c, "puddle") ||
+        (this.objects[r][c] !== "empty" && this.tileTypes[r][c] === "puddle")
+      ) {
+        return puddleImage;
+      } else if (
         this.isTileType(r, c, "grate") ||
         (this.objects[r][c] !== "empty" && this.tileTypes[r][c] === "grate")
       ) {
@@ -444,8 +449,6 @@ export default {
         return crackedImage;
       } else if (this.isTileType(r, c, "speaker")) {
         return speakerImage;
-      } else if (this.isTileType(r, c, "puddle")) {
-        return puddleImage;
       } else if (this.isTileType(r, c, "computer")) {
         return computerImage;
       } else if (this.isTileType(r, c, "computer2")) {
