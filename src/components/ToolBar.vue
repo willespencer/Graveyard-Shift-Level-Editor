@@ -406,9 +406,10 @@ export default {
     addTrigger(trigger) {
       this.$emit("add-trigger", trigger);
     },
-    // change the placing tile to floor if trigger menu closed
+    // change the placing tile to floor if trigger menu closed and emit
     closeTriggerMenu() {
       this.changePlacing("floor");
+      this.$emit("close-triggers");
     },
   },
 };

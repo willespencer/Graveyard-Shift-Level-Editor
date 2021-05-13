@@ -33,6 +33,7 @@
         :triggerToEdit="triggerToEdit"
         @update-tile-placing="updateTilePlacing"
         @add-trigger="addTrigger"
+        @close-triggers="closeTriggers"
       />
       <level-map
         class="map"
@@ -246,6 +247,11 @@ export default {
     // add a trigger created from the trigger toolbar
     addTrigger(trigger) {
       this.triggerList.push(trigger);
+      this.triggerToEdit = null;
+    },
+    // reset trigger to edit when the menu is closed
+    closeTriggers() {
+      this.triggerToEdit = null;
     },
     // delete a trigger clicked on in the finished triggers
     deleteTrigger(index) {
