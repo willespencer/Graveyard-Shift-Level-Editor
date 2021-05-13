@@ -35,10 +35,20 @@
       v-for="index in triggerList.length"
       :key="index + 10000"
       :style="{
-        bottom: `calc(45px * ${getBottomValue(index - 1)})`,
-        left: `calc(45px * ${getLeftValue(index - 1)})`,
-        height: `calc(45px * ${getHeight(index - 1)})`,
-        width: `calc(45px * ${getWidth(index - 1)})`,
+        bottom: `calc(45px * ${getBottomValue(triggerList[index - 1])})`,
+        left: `calc(45px * ${getLeftValue(triggerList[index - 1])})`,
+        height: `calc(45px * ${getHeight(triggerList[index - 1])})`,
+        width: `calc(45px * ${getWidth(triggerList[index - 1])})`,
+      }"
+    ></div>
+    <div
+      class="trigger trigger--current"
+      v-if="currentTrigger"
+      :style="{
+        bottom: `calc(45px * ${getBottomValue(currentTrigger)})`,
+        left: `calc(45px * ${getLeftValue(currentTrigger)})`,
+        height: `calc(45px * ${getHeight(currentTrigger)})`,
+        width: `calc(45px * ${getWidth(currentTrigger)})`,
       }"
     ></div>
   </div>
@@ -142,6 +152,7 @@ export default {
     inputPaths: Array,
     levelLoading: Boolean,
     triggerList: Array,
+    currentTrigger: Object,
   },
   data() {
     // if tiles inputted (i.e. map loaded), display that instead of the default map
@@ -572,20 +583,16 @@ export default {
       return contains;
     },
     // helper functions to get style values for displaying the correct trigger locations
-    getBottomValue(index) {
-      let trigger = this.triggerList[index];
+    getBottomValue(trigger) {
       return trigger.position[1];
     },
-    getLeftValue(index) {
-      let trigger = this.triggerList[index];
+    getLeftValue(trigger) {
       return trigger.position[0];
     },
-    getHeight(index) {
-      let trigger = this.triggerList[index];
+    getHeight(trigger) {
       return trigger.dimensions[1];
     },
-    getWidth(index) {
-      let trigger = this.triggerList[index];
+    getWidth(trigger) {
       return trigger.dimensions[0];
     },
   },
@@ -681,5 +688,9 @@ export default {
   position: absolute;
   z-index: 5;
   pointer-events: none;
+}
+
+.trigger--current {
+  border: 1px solid white;
 }
 </style>

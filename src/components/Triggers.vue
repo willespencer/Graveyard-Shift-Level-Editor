@@ -256,6 +256,10 @@ export default {
         }
       },
     },
+    // when trigger updated, emit new trigger
+    getCurrentTrigger(newVal) {
+      this.$emit("current-trigger", newVal);
+    },
   },
   computed: {
     // returns true if a trigger can be added with current data - i.e. if a button of each type has been selected and text has been written
@@ -270,10 +274,8 @@ export default {
         this.textInputs[0].length > 0
       );
     },
-  },
-  methods: {
-    // add a trigger to the running list of triggers on button submit
-    addTrigger() {
+    // returns the JSON of the current trigger based on inputted data
+    getCurrentTrigger() {
       let trigger = {
         type: this.findTrueOptionUppercase(this.typeButtons),
         action: this.findTrueOptionUppercase(this.actionButtons),
@@ -314,6 +316,14 @@ export default {
           trigger.text = this.textInputs.slice(0, index);
         }
       }
+
+      return trigger;
+    },
+  },
+  methods: {
+    // add a trigger to the running list of triggers on button submit
+    addTrigger() {
+      let trigger = this.getCurrentTrigger;
 
       this.$emit("add-trigger", trigger);
       this.clearData();

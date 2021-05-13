@@ -6,6 +6,7 @@
         :triggerToEdit="triggerToEdit"
         @add-trigger="addTrigger"
         @close-triggers="closeTriggerMenu"
+        @current-trigger="setCurrentTrigger"
       />
     </div>
     <div v-else>
@@ -410,6 +411,10 @@ export default {
     closeTriggerMenu() {
       this.changePlacing("floor");
       this.$emit("close-triggers");
+    },
+    // return the json of the current trigger being edited
+    setCurrentTrigger(trigger) {
+      this.$emit("set-current-trigger", trigger);
     },
   },
 };

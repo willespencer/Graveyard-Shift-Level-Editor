@@ -34,6 +34,7 @@
         @update-tile-placing="updateTilePlacing"
         @add-trigger="addTrigger"
         @close-triggers="closeTriggers"
+        @set-current-trigger="setCurrentTrigger"
       />
       <level-map
         class="map"
@@ -44,6 +45,7 @@
         :inputPaths="inputPaths"
         :levelLoading="levelLoading"
         :triggerList="triggerList"
+        :currentTrigger="currentTrigger"
         @level-loaded="setLevelLoaded"
         @tile-changed="updateTilesAndObjects"
       />
@@ -104,8 +106,8 @@
             Use the icon buttons to edit and delete existing triggers.
           </li>
           <li class="instructionsItem">
-            Triggers will show up in their exact locations on the map after
-            being added.
+            Triggers will show up in their exact locations on the map in white
+            while being edited, and in red after being added.
           </li>
           <li class="instructionsItem">
             See the documentation
@@ -189,6 +191,7 @@ export default {
       fileName: "No file chosen",
       triggerList: [],
       triggerToEdit: null,
+      currentTrigger: null,
     };
   },
   // event to retrieve the file name after selected
@@ -263,6 +266,9 @@ export default {
     editTrigger(index) {
       this.triggerToEdit = this.triggerList[index];
       this.deleteTrigger(index);
+    },
+    setCurrentTrigger(trigger) {
+      this.currentTrigger = trigger;
     },
     // load in an existing map
     // code adapted from: https://stackoverflow.com/questions/59155812/vue-upload-local-json-file
