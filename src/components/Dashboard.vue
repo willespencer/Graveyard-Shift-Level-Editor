@@ -112,16 +112,16 @@
             while being edited, and in red after being added.
           </li>
           <li class="instructionsItem">
+            You can click on the map to set the position of the trigger, or edit
+            the input boxes.
+          </li>
+          <li class="instructionsItem">
             See the documentation
             <a
               href="https://docs.google.com/document/d/1f4QII6ioYrXxkfo8nIl4pulZcKYwYetdZBPdwL1Ert4/edit"
               >here</a
             >
             to explore the options available.
-          </li>
-          <li class="instructionsItem">
-            Note that accidently clicking on the map while in the trigger menu
-            will place a floor tile, so be careful.
           </li>
         </ol>
         <h3 class="instructionsTitle instructionsTitle--last">
