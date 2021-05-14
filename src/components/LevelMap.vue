@@ -314,6 +314,14 @@ export default {
     },
     // when clicked, update the tile at r, c to whatever type of tile is being placed
     updateTile(r, c) {
+      // if placing a trigger, set the current trigger's position to r, c
+      if (this.typeToPlace === "trigger") {
+        if (this.currentTrigger) {
+          this.currentTrigger.position = [c, this.height - r - 1];
+          this.$emit("update-trigger-pos", this.currentTrigger.position);
+        }
+        return;
+      }
       // if placing a non-mutant/path on top of a mutant, remove path mutant is in, if any
       if (
         !mutantTypes.includes(this.typeToPlace) &&

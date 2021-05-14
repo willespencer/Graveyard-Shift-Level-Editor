@@ -31,6 +31,7 @@
       <tool-bar
         class="toolbar"
         :triggerToEdit="triggerToEdit"
+        :currentTriggerPosition="currentTriggerPosition"
         @update-tile-placing="updateTilePlacing"
         @add-trigger="addTrigger"
         @close-triggers="closeTriggers"
@@ -48,6 +49,7 @@
         :currentTrigger="currentTrigger"
         @level-loaded="setLevelLoaded"
         @tile-changed="updateTilesAndObjects"
+        @update-trigger-pos="updateTriggerPosition"
       />
     </div>
     <finished-triggers
@@ -191,7 +193,11 @@ export default {
       fileName: "No file chosen",
       triggerList: [],
       triggerToEdit: null,
-      currentTrigger: null,
+      currentTrigger: {
+        position: [0, 0],
+        dimensions: [1, 1],
+      },
+      currentTriggerPosition: [0, 0],
     };
   },
   // event to retrieve the file name after selected
@@ -269,6 +275,10 @@ export default {
     },
     setCurrentTrigger(trigger) {
       this.currentTrigger = trigger;
+    },
+    // update trigger position
+    updateTriggerPosition(position) {
+      this.currentTriggerPosition = position;
     },
     // load in an existing map
     // code adapted from: https://stackoverflow.com/questions/59155812/vue-upload-local-json-file

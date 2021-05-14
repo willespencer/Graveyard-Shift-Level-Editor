@@ -4,6 +4,7 @@
     <div v-if="isSelected('trigger')">
       <triggers
         :triggerToEdit="triggerToEdit"
+        :currentTriggerPosition="currentTriggerPosition"
         @add-trigger="addTrigger"
         @close-triggers="closeTriggerMenu"
         @current-trigger="setCurrentTrigger"
@@ -387,6 +388,7 @@ export default {
   components: { Triggers },
   props: {
     triggerToEdit: Object,
+    currentTriggerPosition: Array,
   },
   data() {
     return {

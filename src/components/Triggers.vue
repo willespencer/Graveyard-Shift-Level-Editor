@@ -154,6 +154,7 @@
 export default {
   props: {
     triggerToEdit: Object,
+    currentTriggerPosition: Array,
   },
   data() {
     let typeButtons = {
@@ -254,6 +255,14 @@ export default {
         } else {
           this.textInputs[0] = val.control;
         }
+      },
+    },
+    // if trigger position updated on map, update on trigger toolbar
+    currentTriggerPosition: {
+      immediate: true,
+      handler(val) {
+        this.positionX = val[0];
+        this.positionY = val[1];
       },
     },
     // when trigger updated, emit new trigger
