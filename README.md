@@ -12,7 +12,7 @@ From there, the toolbar can be used to add different types of tiles (like goals,
 
 ![image](https://user-images.githubusercontent.com/25535093/131572458-413a5d62-bc15-4332-9673-3b6846b971e1.png)
 
-From there, mutant patrolling paths can be added by connecting mutants, and dialogue triggers can be added or edited by using the trigger menu, with options like trigger type and dimensions, and a grid of existing triggers viewable. 
+Furthermore, mutant patrolling paths can be added by connecting mutants, and dialogue triggers can be viewed, added, and edited by using the trigger menu, with options like trigger type and dimensions, and a grid of existing triggers viewable. 
 
 ![image](https://user-images.githubusercontent.com/25535093/131573590-ed7fb8fb-f7cb-4d0a-b1c6-ad24469679ac.png)
 
